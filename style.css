@@ -1,3 +1,152 @@
-body{
-  bgcolor: navi;
-}
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(-8deg); }
+    50% { transform: translateY(-12px) rotate(-8deg); }
+  }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0.4); }
+    70% { box-shadow: 0 0 0 18px rgba(120, 180, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0); }
+  }
+  @keyframes orbit {
+    from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .space-bg {
+    min-height: 520px;
+    background: #06091a;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    font-family: var(--font-sans);
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .planet-system {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .planet {
+    width: 52px;
+    height: 52px;
+    background: #1e4fa3;
+    border-radius: 50%;
+    border: 3px solid #3a78e8;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ring {
+    position: absolute;
+    width: 90px;
+    height: 28px;
+    border: 3px solid rgba(80, 140, 255, 0.55);
+    border-radius: 50%;
+    transform: rotateX(60deg);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .moon {
+    width: 14px;
+    height: 14px;
+    background: #c8d4e8;
+    border-radius: 50%;
+    position: absolute;
+    animation: orbit 6s linear infinite;
+    z-index: 3;
+  }
+
+  .rocket {
+    font-size: 56px;
+    animation: float 3s ease-in-out infinite;
+    display: block;
+    margin-bottom: 0.75rem;
+    filter: drop-shadow(0 0 12px rgba(100,160,255,0.5));
+  }
+
+  .title {
+    font-size: 2.2rem;
+    font-weight: 500;
+    color: #e8f0ff;
+    text-align: center;
+    margin: 0 0 0.4rem;
+    letter-spacing: 0.04em;
+    animation: fadeIn 0.8s ease both;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #7090c0;
+    text-align: center;
+    margin: 0 0 2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    animation: fadeIn 0.8s 0.2s ease both;
+  }
+
+  .start-btn {
+    background: transparent;
+    border: 1.5px solid #3a78e8;
+    color: #9fc4ff;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75rem 2.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    animation: fadeIn 0.8s 0.4s ease both, pulse-ring 2.5s 1.5s infinite;
+  }
+  .start-btn:hover {
+    background: rgba(58, 120, 232, 0.2);
+    color: #dceeff;
+    transform: scale(1.05);
+  }
+  .start-btn:active {
+    transform: scale(0.97);
+  }
+
+  .badge {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font-size: 11px;
+    color: #3a78e8;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    pointer-events: none;
+  }
