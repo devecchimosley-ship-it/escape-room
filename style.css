@@ -197,3 +197,12 @@ body {
     0%, 100% { opacity: 0.3; }
     50% { opacity: 1; }
 }
+
+.timer {
+    font-size: 1.5rem;
+    color: #ff4b2b; /* Un colore rosso/arancio per dare urgenza */
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 75, 43, 0.7);
+    animation: fadeIn 0.5s ease;
+}
