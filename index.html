@@ -11,7 +11,6 @@
     <div class="space-bg" id="space">
         <div class="nebula nebula-1"></div>
         <div class="nebula nebula-2"></div>
-
         <span class="badge">Missione Segreta — 2147</span>
 
         <div class="planet-system">
@@ -21,16 +20,44 @@
         </div>
 
         <div class="content">
-            <span class="rocket">🚀</span>
-            <h1 class="title">EscapeBox Spaziale</h1>
-            <p class="subtitle">Sopravvivi alla stazione abbandonata</p>
-            
-            <button class="start-btn" id="startBtn">
-                ▶ &nbsp; Inizia la Missione
-            </button>
+            <div id="screenHome">
+                <span class="rocket">🚀</span>
+                <h1 class="title">EscapeBox Spaziale</h1>
+                <p class="subtitle">Sopravvivi alla stazione abbandonata</p>
+                <button class="start-btn" id="startBtn">▶ &nbsp; Inizia la Missione</button>
+            </div>
+
+            <div id="screenNumPlayers" style="display: none;">
+                <h2 class="title" style="font-size: 1.8rem; margin-bottom: 20px;">Quanti tecnici siete?</h2>
+                <input type="number" id="numPlayersInput" min="1" max="10" placeholder="Inserisci numero" class="space-input">
+                <br><br>
+                <button class="start-btn" id="confirmNumBtn">Avanti</button>
+            </div>
+
+            <div id="screenNames" style="display: none;">
+                <h2 class="title" style="font-size: 1.8rem; margin-bottom: 20px;">Identificazione Equipaggio</h2>
+                <div id="namesContainer"></div>
+                <br>
+                <button class="start-btn" id="confirmNamesBtn">Registra</button>
+            </div>
+
+            <div id="screenStory" style="display: none;">
+                <p class="story-text">
+                    Immaginate di essere i tecnici di bordo della Icarus-7. Vi risvegliate con il suono stridente di un allarme. 
+                    L'ossigeno sta finendo e l'AI di bordo, AURA, è entrata in modalità di sicurezza estrema a causa di un guasto critico.<br><br> 
+                    Se non inserite i codici corretti, le paratie stagne rimarranno bloccate e i serbatoi verranno espulsi nello spazio profondo.<br><br>
+                    <strong>Avete 3 sfide.</strong>
+                </p>
+                <button class="start-btn" id="startChallengesBtn">Accetta il Destino</button>
+            </div>
+
+            <div id="screenGame" style="display: none;">
+                <div id="timer" class="timer">Tempo: 00:00</div>
+                <p class="subtitle" style="margin-top: 10px;">Le sfide iniziano ora...</p>
+            </div>
         </div>
     </div>
-    <div id="timer" class="timer" style="display: none;">Tempo: 00:00</div>
+
     <script src="script.js"></script>
 </body>
 </html>
