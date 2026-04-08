@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EscapeBox Spaziale</title>
-  </head>
-  <body>
-    <h3>Benvenuti nel Escape-Box</h3>
-    </button id="start" onclick="start()" value="inizio" \>
-  <body>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="space-bg" id="space">
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+
+        <span class="badge">Missione Segreta — 2147</span>
+
+        <div class="planet-system">
+            <div class="ring"></div>
+            <div class="planet"></div>
+            <div class="moon"></div>
+        </div>
+
+        <div class="content">
+            <span class="rocket">🚀</span>
+            <h1 class="title">EscapeBox Spaziale</h1>
+            <p class="subtitle">Sopravvivi alla stazione abbandonata</p>
+            
+            <button class="start-btn" id="startBtn">
+                ▶ &nbsp; Inizia la Missione
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
