@@ -1,28 +1,26 @@
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 1; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(-8deg); }
-    50% { transform: translateY(-12px) rotate(-8deg); }
-  }
-  @keyframes pulse-ring {
-    0% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0.4); }
-    70% { box-shadow: 0 0 0 18px rgba(120, 180, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0); }
-  }
-  @keyframes orbit {
-    from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-    to   { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+:root {
+    --space-deep: #06091a;
+    --accent-blue: #3a78e8;
+    --text-glow: #e8f0ff;
+    --sub-blue: #7090c0;
+}
 
-  .space-bg {
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container Principale */
+.space-bg {
+    width: 100%;
+    max-width: 800px;
     min-height: 520px;
-    background: #06091a;
+    background: var(--space-deep);
     border-radius: 16px;
     position: relative;
     overflow: hidden;
@@ -30,17 +28,57 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2.5rem 1rem;
-    font-family: var(--font-sans);
-  }
+    font-family: sans-serif;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
 
-  .star {
+/* Stelle generate via JS */
+.star {
     position: absolute;
     background: white;
     border-radius: 50%;
-  }
+    pointer-events: none;
+}
 
-  .planet-system {
+/* Nebulose */
+.nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.nebula-1 {
+    width: 300px;
+    height: 250px;
+    background: rgba(30, 60, 180, 0.2);
+    top: -50px;
+    left: -70px;
+}
+
+.nebula-2 {
+    width: 250px;
+    height: 200px;
+    background: rgba(100, 30, 160, 0.15);
+    bottom: -40px;
+    right: -50px;
+}
+
+/* Badge Missione */
+.badge {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    font-size: 11px;
+    color: var(--accent-blue);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Decorazione Pianeta */
+.planet-system {
     position: absolute;
     top: 60px;
     right: 80px;
@@ -49,9 +87,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
 
-  .planet {
+.planet {
     width: 52px;
     height: 52px;
     background: #1e4fa3;
@@ -59,94 +97,103 @@
     border: 3px solid #3a78e8;
     position: relative;
     z-index: 2;
-  }
+}
 
-  .ring {
+.ring {
     position: absolute;
-    width: 90px;
-    height: 28px;
-    border: 3px solid rgba(80, 140, 255, 0.55);
+    width: 100px;
+    height: 30px;
+    border: 3px solid rgba(80, 140, 255, 0.4);
     border-radius: 50%;
-    transform: rotateX(60deg);
+    transform: rotateX(65deg);
     z-index: 1;
-    pointer-events: none;
-  }
+}
 
-  .moon {
-    width: 14px;
-    height: 14px;
+.moon {
+    width: 12px;
+    height: 12px;
     background: #c8d4e8;
     border-radius: 50%;
     position: absolute;
-    animation: orbit 6s linear infinite;
+    animation: orbit 8s linear infinite;
     z-index: 3;
-  }
+}
 
-  .rocket {
-    font-size: 56px;
-    animation: float 3s ease-in-out infinite;
+/* UI Content */
+.content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.rocket {
+    font-size: 60px;
     display: block;
-    margin-bottom: 0.75rem;
-    filter: drop-shadow(0 0 12px rgba(100,160,255,0.5));
-  }
+    margin-bottom: 15px;
+    animation: float 3.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(58, 120, 232, 0.5));
+}
 
-  .title {
-    font-size: 2.2rem;
-    font-weight: 500;
-    color: #e8f0ff;
-    text-align: center;
-    margin: 0 0 0.4rem;
-    letter-spacing: 0.04em;
-    animation: fadeIn 0.8s ease both;
-  }
+.title {
+    font-size: 2.5rem;
+    color: var(--text-glow);
+    margin: 0;
+    letter-spacing: 2px;
+    animation: fadeIn 1s ease forwards;
+}
 
-  .subtitle {
+.subtitle {
     font-size: 1rem;
-    color: #7090c0;
-    text-align: center;
-    margin: 0 0 2rem;
-    letter-spacing: 0.08em;
+    color: var(--sub-blue);
+    margin: 10px 0 30px;
     text-transform: uppercase;
-    animation: fadeIn 0.8s 0.2s ease both;
-  }
+    letter-spacing: 3px;
+    animation: fadeIn 1s 0.3s ease both;
+}
 
-  .start-btn {
+/* Bottone */
+.start-btn {
     background: transparent;
-    border: 1.5px solid #3a78e8;
+    border: 2px solid var(--accent-blue);
     color: #9fc4ff;
+    padding: 12px 40px;
     font-size: 1rem;
-    font-weight: 500;
-    padding: 0.75rem 2.5rem;
     border-radius: 50px;
     cursor: pointer;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
-    transition: background 0.2s, color 0.2s, transform 0.15s;
-    animation: fadeIn 0.8s 0.4s ease both, pulse-ring 2.5s 1.5s infinite;
-  }
-  .start-btn:hover {
+    transition: all 0.3s;
+    animation: fadeIn 1s 0.6s ease both, pulse 2s infinite;
+}
+
+.start-btn:hover {
     background: rgba(58, 120, 232, 0.2);
-    color: #dceeff;
+    box-shadow: 0 0 20px rgba(58, 120, 232, 0.4);
     transform: scale(1.05);
-  }
-  .start-btn:active {
-    transform: scale(0.97);
-  }
+}
 
-  .badge {
-    position: absolute;
-    top: 20px;
-    left: 24px;
-    font-size: 11px;
-    color: #3a78e8;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.7;
-  }
+/* Keyframes */
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    50% { transform: translateY(-15px) rotate(-8deg); }
+}
 
-  .nebula {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(50px);
-    pointer-events: none;
-  }
+@keyframes orbit {
+    from { transform: rotate(0deg) translateX(85px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(85px) rotate(-360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(120, 180, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0); }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
