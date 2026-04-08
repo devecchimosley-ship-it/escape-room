@@ -20,7 +20,6 @@ body {
     user-select: none;
 }
 
-/* Container principale stile monitor CRT */
 .terminal-container {
     width: 90vw;
     height: 90vh;
@@ -36,7 +35,6 @@ body {
     padding: 10px;
 }
 
-/* Header stile bios/prompt */
 .terminal-header {
     border-bottom: 2px solid var(--green-dim);
     padding: 5px;
@@ -45,31 +43,11 @@ body {
     justify-content: space-between;
 }
 
-.terminal-header span {
-    padding: 0 10px;
-}
+.terminal-header .alert { animation: blink 1s infinite; }
+.terminal-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
 
-.terminal-header .alert {
-    animation: blink 1s infinite;
-}
-
-/* Contenuto principale con animazioni di testo */
-.terminal-content {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 15px;
-}
-
-.terminal-state {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease-in;
-}
-
-.terminal-state.active {
-    display: block;
-    opacity: 1;
-}
+.terminal-state { display: none; opacity: 0; transition: opacity 0.5s ease-in; }
+.terminal-state.active { display: block; opacity: 1; }
 
 h2, h3 {
     color: var(--green-bright);
@@ -78,160 +56,85 @@ h2, h3 {
     border-bottom: 1px solid var(--green-dim);
     padding-bottom: 5px;
 }
+p { margin: 10px 0; line-height: 1.4; text-transform: uppercase; }
 
-p {
-    margin: 10px 0;
-    line-height: 1.4;
-    text-transform: uppercase;
-}
-
-/* Testi colorati e stili */
 .error-text, .log-var, .formula-text { color: var(--red-bright); text-shadow: 0 0 5px var(--red-bright); font-weight: bold;}
 .success-text { color: var(--green-bright); text-shadow: 0 0 5px var(--green-bright); font-weight: bold;}
 .alert-text { color: orange; font-weight: bold; text-shadow: 0 0 5px orange;}
 
-/* Visual degli enigmi */
 .enigma-visual {
-    width: 200px;
-    height: 200px;
-    border: 2px solid var(--green-dim);
-    background-color: #080808;
-    margin: 10px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
+    width: 200px; height: 200px; border: 2px solid var(--green-dim);
+    background-color: #080808; margin: 10px auto; display: flex;
+    justify-content: center; align-items: center; padding: 5px;
 }
-
-.enigma-text {
-    fill: var(--green-bright);
-    font-family: var(--terminal-font);
-    font-weight: bold;
-}
-
+.enigma-text { fill: var(--green-bright); font-family: var(--terminal-font); font-weight: bold; }
 .enigma-text.large { font-size: 50px; }
 .enigma-text.small { font-size: 8px; fill: var(--green-dim); }
 
-/* SVG Reattore */
 .reactor-core { stroke: var(--green-dim); fill: none; stroke-dasharray: 10; animation: rotate 2s linear infinite; }
 .reactor-rod { fill: var(--red-dim); }
 
-/* SVG Mappa Capsule */
-.capsula-map {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-.capsula {
-    border: 2px solid var(--green-dim);
-    text-align: center;
-    padding: 10px;
-    cursor: not-allowed;
-    position: relative;
-    opacity: 0.5;
-}
+.capsula-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.capsula { border: 2px solid var(--green-dim); text-align: center; padding: 10px; opacity: 0.5; }
 .capsula text { font-size: 20px; font-weight: bold; color: var(--green-bright); }
 .capsula span { color: var(--green-dim); font-size: 10px; font-weight: bold; display: block;}
-
-.capsula-A, .capsula-B, .capsula-C {
-    cursor: pointer;
-    opacity: 1;
-}
-
-/* Canvas Cubo */
 #cube-canvas { width: 100%; height: 100%;}
 
 /* Bottoni e Input */
 .terminal-btn {
-    background-color: var(--green-dim);
-    border: 1px solid var(--green-bright);
-    color: var(--bg-color);
-    font-family: var(--terminal-font);
-    font-weight: bold;
-    padding: 10px 20px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    margin-top: 10px;
+    background-color: var(--green-dim); border: 1px solid var(--green-bright);
+    color: var(--bg-color); font-family: var(--terminal-font); font-weight: bold;
+    padding: 10px 20px; cursor: pointer; text-transform: uppercase;
+    transition: all 0.2s; margin-top: 10px; width: 100%;
 }
 .terminal-btn:hover { background-color: var(--green-bright); color: var(--bg-color); }
+.outline-btn { background: none; color: var(--green-bright); }
+.outline-btn:hover { background: rgba(51, 255, 51, 0.2); }
 
 .terminal-input {
-    display: none;
-    border-top: 2px solid var(--green-dim);
-    padding: 10px;
-    flex-direction: row;
-    align-items: center;
+    display: none; border-top: 2px solid var(--green-dim); padding: 10px;
+    flex-direction: row; align-items: center;
 }
-
 .terminal-input.active { display: flex; }
-
-.terminal-input .prompt {
-    font-weight: bold;
-    color: var(--green-dim);
-    margin-right: 10px;
-}
-
+.terminal-input .prompt { font-weight: bold; color: var(--green-dim); margin-right: 10px; }
 .terminal-input input {
-    background: none;
-    border: none;
-    border-bottom: 2px solid var(--green-bright);
-    color: var(--green-bright);
-    font-family: var(--terminal-font);
-    font-size: 18px;
-    letter-spacing: 5px;
-    outline: none;
-    width: 200px;
-    text-transform: uppercase;
+    background: none; border: none; border-bottom: 2px solid var(--green-bright);
+    color: var(--green-bright); font-family: var(--terminal-font); font-size: 18px;
+    letter-spacing: 5px; outline: none; width: 200px; text-transform: uppercase;
 }
+.terminal-input .submit-btn { width: auto; margin: 0; margin-left: 10px; padding: 8px 15px; }
 
-.terminal-input .submit-btn {
-    margin: 0;
-    padding: 8px 15px;
-    margin-left: 10px;
+/* STILI NUOVI: Form e Classifica */
+.form-group { margin: 15px 0; display: flex; flex-direction: column; }
+.form-group input {
+    background: #000; border: 1px solid var(--green-dim); color: var(--green-bright);
+    padding: 10px; font-family: var(--terminal-font); font-size: 16px; margin-top: 5px; text-transform: uppercase;
 }
+#leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+#leaderboard-table th, #leaderboard-table td {
+    border: 1px solid var(--green-dim); padding: 10px; text-align: center;
+}
+#leaderboard-table th { color: var(--bg-color); background-color: var(--green-dim); }
+.blink { animation: blink 1s infinite; }
 
-/* Linee di scansione video */
 .scanlines {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 100;
+    background-size: 100% 4px; pointer-events: none; z-index: 100;
 }
 
-/* Animazioni */
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.glitch-text {
-    position: relative;
-    color: var(--red-bright);
-    font-weight: bold;
-}
+.glitch-text { position: relative; color: var(--red-bright); font-weight: bold; }
 .glitch-text::before, .glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    opacity: 0.8;
+    content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8;
 }
 .glitch-text::before { color: var(--green-bright); animation: glitch-anim 2s infinite linear alternate-reverse; }
 .glitch-text::after { color: orange; animation: glitch-anim 1s infinite linear alternate-reverse; }
 
 @keyframes glitch-anim {
-    0% { transform: translate(0); }
+    0%, 50%, 100% { transform: translate(0); }
     10% { transform: translate(-2px, -2px); }
-    20% { transform: translate(2px, 2px); }
     30% { transform: translate(-2px, 2px); }
-    40% { transform: translate(2px, -2px); }
-    50% { transform: translate(0); }
-    100% { transform: translate(0); }
 }
-
-/* Stili specifici per i risultati finali */
-#state-vittoria { background-color: rgba(51, 255, 51, 0.1); }
-#state-sconfitta { background-color: rgba(255, 51, 51, 0.1); }
