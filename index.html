@@ -3,59 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EscapeBox Spaziale</title>
+    <title>ICARUS-7: Fuga dallo Spazio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="space-bg" id="space">
-        <div class="nebula nebula-1"></div>
-        <div class="nebula nebula-2"></div>
-        <span class="badge">Missione Segreta — 2147</span>
+    <div class="terminal-container">
+        <header class="terminal-header">
+            <span class="host">ICARUS-7_SYSTEM</span>
+            <span class="status alert">O2 LOW</span>
+            <span class="time">--:--</span>
+        </header>
 
-        <div class="planet-system">
-            <div class="ring"></div>
-            <div class="planet"></div>
-            <div class="moon"></div>
-        </div>
+        <main class="terminal-content">
+            <div id="display-area">
+                <section id="state-intro" class="terminal-state active">
+                    <h2>ACCESSO SISTEMA CENTRALIZZATO</h2>
+                    <p class="glitch-text" data-text="GUASTO CRITICO RILEVATO">GUASTO CRITICO RILEVATO</p>
+                    <p>Rilevato utente non autorizzato. <span class="error-text">Protocollo di contenimento attivato.</span></p>
+                    <p>Espulsione moduli biologici tra 15 minuti.</p>
+                    <p>Sblocco paratie manuale richiesto per l'accesso ai moduli di salvataggio.</p>
+                    <p>Risolvere sequenza di 4 protocolli di sicurezza per l'espulsione.</p>
+                    <button class="terminal-btn start-btn">INIZIA SBLOCCO</button>
+                </section>
 
-        <div class="content">
-            <div id="screenHome">
-                <span class="rocket">🚀</span>
-                <h1 class="title">EscapeBox Spaziale</h1>
-                <p class="subtitle">Sopravvivi alla stazione abbandonata</p>
-                <button class="start-btn" id="startBtn">▶ &nbsp; Inizia la Missione</button>
+                <section id="state-sfida1" class="terminal-state">
+                    <h3>PROTOCOLLO 1: IL SIGILLO DI INGRESSO</h3>
+                    <div class="enigma-visual">
+                        <svg viewBox="0 0 100 100">
+                            <text x="50%" y="45%" text-anchor="middle" class="enigma-text large">?</text>
+                            <text x="50%" y="65%" text-anchor="middle" class="enigma-text small">Indizio: Traduci SUN e segui la sequenza.</text>
+                        </svg>
+                    </div>
+                    <p>Indovinello: "Va nell'acqua e non si bagna, tra le spine e non si punge, entra in casa e non ci resta."</p>
+                    <p>Traduci in inglese la soluzione (3 lettere). Ottieni il codice numerico di 6 cifre con la posizione delle lettere nell'alfabeto.</p>
+                </section>
+
+                <section id="state-sfida2" class="terminal-state">
+                    <h3>PROTOCOLLO 2: IL CALCOLO DEL REATTORE</h3>
+                    <div class="enigma-visual">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke-width="2" class="reactor-core"/>
+                            <rect x="40" y="20" width="20" height="60" rx="2" class="reactor-rod"/>
+                            <text x="50" y="55" text-anchor="middle" class="enigma-text reattore-val">--</text>
+                            <text x="50" y="80" text-anchor="middle" class="enigma-text small">Frequenza Hz</text>
+                        </svg>
+                    </div>
+                    <p>Motore a curvatura in sovraccarico. <span class="error-text">Nucleo in fusione!</span></p>
+                    <p>Frenquenza di risonanza <strong class="formula-text">F = √( (K * C²) / M )</strong></p>
+                    <p>Dati: K=4, C=3, M=1. Calcola F.</p>
+                </section>
+
+                <section id="state-sfida3" class="terminal-state">
+                    <h3>PROTOCOLLO 3: LE CAPSULE DI SALVATAGGIO</h3>
+                    <div class="enigma-visual capsula-map">
+                        <div class="capsula" id="cap-A"><text>?</text><span>A</span></div>
+                        <div class="capsula" id="cap-B"><text>?</text><span>B</span></div>
+                        <div class="capsula" id="cap-C"><text>?</text><span>C</span></div>
+                    </div>
+                    <p>3 capsule: A, B, C.</p>
+                    <p>A ha motori fusi, C radiazioni gamma, B è funzionante.</p>
+                    <p>Cartello su B: "La capsula C è pericolosa".</p>
+                    <p><span class="alert-text">Solo 1 affermazione è vera.</span> Quale capsula è sicura? (A, B, or C)</p>
+                </section>
+
+                <section id="state-sfida4" class="terminal-state">
+                    <h3>PROTOCOLLO 4: SISTEMA DI EQUAZIONI LOGICHE</h3>
+                    <div class="enigma-visual">
+                        <canvas id="cube-canvas"></canvas>
+                    </div>
+                    <p>Trova il valore di <strong class="formula-text">(V+I+T+A) * 10</strong></p>
+                    <ul>
+                        <li><strong class="log-var">V</strong> → Numero che completa: 2-6-12-20-30-(V)</li>
+                        <li><strong class="log-var">I</strong> → Numero di facce di un solido regolare con 12 spigoli e 8 vertici.</li>
+                        <li><strong class="log-var">T</strong> → Valore di x in 4:8 = x:V</li>
+                        <li><strong class="log-var">A</strong> → √(V+I+T+12)</li>
+                    </ul>
+                    <p>La soluzione finale è (V+I+T+A) moltiplicato per 10.</p>
+                </section>
+
+                <section id="state-vittoria" class="terminal-state">
+                    <h2>SBLOCCO SISTEMA COMPLETATO</h2>
+                    <p class="success-text">Protocollo di sicurezza disattivato.</p>
+                    <p>Pressione d'ossigeno in ripristino.</p>
+                    <p>Portelli manuali sbloccati. Accesso alle capsule di salvataggio consentito.</p>
+                    <p>Buona fortuna, tecnico.</p>
+                </section>
+
+                <section id="state-sconfitta" class="terminal-state">
+                    <h2><span class="error-text">ERRORE CRITICO</span></h2>
+                    <p class="alert-text">Ossigeno esaurito.</p>
+                    <p>Espulsione moduli biologici completata.</p>
+                    <p>Contatto radio interrotto.</p>
+                </section>
             </div>
+        </main>
 
-            <div id="screenNumPlayers" style="display: none;">
-                <h2 class="title" style="font-size: 1.8rem; margin-bottom: 20px;">Quanti tecnici siete?</h2>
-                <input type="number" id="numPlayersInput" min="1" max="10" placeholder="Inserisci numero" class="space-input">
-                <br><br>
-                <button class="start-btn" id="confirmNumBtn">Avanti</button>
-            </div>
+        <footer class="terminal-input" id="input-area">
+            <span class="prompt">&gt; INSERISCI CODICE SBLOCCO</span>
+            <input type="text" id="code-input" maxlength="10" autocomplete="off" placeholder="_______">
+            <button class="terminal-btn submit-btn" id="submit-code">INVIA</button>
+        </footer>
 
-            <div id="screenNames" style="display: none;">
-                <h2 class="title" style="font-size: 1.8rem; margin-bottom: 20px;">Identificazione Equipaggio</h2>
-                <div id="namesContainer"></div>
-                <br>
-                <button class="start-btn" id="confirmNamesBtn">Registra</button>
-            </div>
-
-            <div id="screenStory" style="display: none;">
-                <p class="story-text">
-                    Immaginate di essere i tecnici di bordo della Icarus-7. Vi risvegliate con il suono stridente di un allarme. 
-                    L'ossigeno sta finendo e l'AI di bordo, AURA, è entrata in modalità di sicurezza estrema a causa di un guasto critico.<br><br> 
-                    Se non inserite i codici corretti, le paratie stagne rimarranno bloccate e i serbatoi verranno espulsi nello spazio profondo.<br><br>
-                    <strong>Avete 3 sfide.</strong>
-                </p>
-                <button class="start-btn" id="startChallengesBtn">Accetta il Destino</button>
-            </div>
-
-            <div id="screenGame" style="display: none;">
-                <div id="timer" class="timer">Tempo: 00:00</div>
-                <p class="subtitle" style="margin-top: 10px;">Le sfide iniziano ora...</p>
-            </div>
-        </div>
     </div>
+
+    <div class="scanlines"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
