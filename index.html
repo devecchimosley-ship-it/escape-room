@@ -16,14 +16,30 @@
 
         <main class="terminal-content">
             <div id="display-area">
-                <section id="state-intro" class="terminal-state active">
-                    <h2>ACCESSO SISTEMA CENTRALIZZATO</h2>
+                
+                <section id="state-login" class="terminal-state active">
+                    <h2>SISTEMA ICARUS-7: IDENTIFICAZIONE</h2>
+                    <p>Inserire le credenziali della squadra di soccorso per avviare il terminale.</p>
+                    <div class="form-group">
+                        <label>NOME SQUADRA:</label>
+                        <input type="text" id="team-name" placeholder="ES: ALPHA-1" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>NUMERO MEMBRI:</label>
+                        <input type="number" id="team-size" min="1" max="10" placeholder="1">
+                    </div>
+                    <button class="terminal-btn" id="login-btn">AUTENTICA SQUADRA</button>
+                    <button class="terminal-btn outline-btn" id="reset-board-btn" style="margin-top: 20px; border-color: red; color: red;">RESETTA CLASSIFICA GLOBALE</button>
+                </section>
+
+                <section id="state-intro" class="terminal-state">
+                    <h2>ACCESSO CONSENTITO. BENTORNATI.</h2>
                     <p class="glitch-text" data-text="GUASTO CRITICO RILEVATO">GUASTO CRITICO RILEVATO</p>
-                    <p>Rilevato utente non autorizzato. <span class="error-text">Protocollo di contenimento attivato.</span></p>
+                    <p>Rilevato utente non autorizzato nel settore principale. <span class="error-text">Protocollo di contenimento attivato.</span></p>
                     <p>Espulsione moduli biologici tra 15 minuti.</p>
                     <p>Sblocco paratie manuale richiesto per l'accesso ai moduli di salvataggio.</p>
-                    <p>Risolvere sequenza di 4 protocolli di sicurezza per l'espulsione.</p>
-                    <button class="terminal-btn start-btn">INIZIA SBLOCCO</button>
+                    <p>Il timer e la registrazione del tempo partiranno premendo il pulsante sottostante.</p>
+                    <button class="terminal-btn start-btn">INIZIA SBLOCCO E AVVIA TIMER</button>
                 </section>
 
                 <section id="state-sfida1" class="terminal-state">
@@ -35,7 +51,7 @@
                         </svg>
                     </div>
                     <p>Indovinello: "Va nell'acqua e non si bagna, tra le spine e non si punge, entra in casa e non ci resta."</p>
-                    <p>Traduci in inglese la soluzione (3 lettere). Ottieni il codice numerico di 6 cifre con la posizione delle lettere nell'alfabeto.</p>
+                    <p>Traduci in inglese la soluzione (3 lettere). Ottieni il codice numerico di 6 cifre con la posizione delle lettere nell'alfabeto (A=1, B=2...).</p>
                 </section>
 
                 <section id="state-sfida2" class="terminal-state">
@@ -61,13 +77,13 @@
                         <div class="capsula" id="cap-C"><text>?</text><span>C</span></div>
                     </div>
                     <p>3 capsule: A, B, C.</p>
-                    <p>A ha motori fusi, C radiazioni gamma, B è funzionante.</p>
+                    <p>La capsula A ha i motori fusi. La C è piena di radiazioni gamma. La B è l'unica funzionante.</p>
                     <p>Cartello su B: "La capsula C è pericolosa".</p>
-                    <p><span class="alert-text">Solo 1 affermazione è vera.</span> Quale capsula è sicura? (A, B, or C)</p>
+                    <p><span class="alert-text">Solo 1 affermazione è vera.</span> Quale scegli secondo i tuoi appunti? (A, B, o C)</p>
                 </section>
 
                 <section id="state-sfida4" class="terminal-state">
-                    <h3>PROTOCOLLO 4: SISTEMA DI EQUAZIONI LOGICHE</h3>
+                    <h3>PROTOCOLLO 4: SISTEMA LOGICO</h3>
                     <div class="enigma-visual">
                         <canvas id="cube-canvas"></canvas>
                     </div>
@@ -78,22 +94,39 @@
                         <li><strong class="log-var">T</strong> → Valore di x in 4:8 = x:V</li>
                         <li><strong class="log-var">A</strong> → √(V+I+T+12)</li>
                     </ul>
-                    <p>La soluzione finale è (V+I+T+A) moltiplicato per 10.</p>
                 </section>
 
                 <section id="state-vittoria" class="terminal-state">
                     <h2>SBLOCCO SISTEMA COMPLETATO</h2>
                     <p class="success-text">Protocollo di sicurezza disattivato.</p>
                     <p>Pressione d'ossigeno in ripristino.</p>
-                    <p>Portelli manuali sbloccati. Accesso alle capsule di salvataggio consentito.</p>
-                    <p>Buona fortuna, tecnico.</p>
+                    <p>Portelli manuali sbloccati. Siete salvi.</p>
+                    <p class="alert-text blink">Calcolo del tempo di fuga in corso... Accesso al database classifiche...</p>
+                </section>
+
+                <section id="state-classifica" class="terminal-state">
+                    <h2>CLASSIFICA TEMPI DI FUGA</h2>
+                    <p>Ecco i migliori team di tecnici sopravvissuti alla Icarus-7:</p>
+                    <table id="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>POS</th>
+                                <th>SQUADRA</th>
+                                <th>MEMBRI</th>
+                                <th>TEMPO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                    <button class="terminal-btn start-btn" onclick="location.reload()" style="margin-top:20px;">NUOVA PARTITA (PROSSIMO GRUPPO)</button>
                 </section>
 
                 <section id="state-sconfitta" class="terminal-state">
                     <h2><span class="error-text">ERRORE CRITICO</span></h2>
                     <p class="alert-text">Ossigeno esaurito.</p>
                     <p>Espulsione moduli biologici completata.</p>
-                    <p>Contatto radio interrotto.</p>
+                    <button class="terminal-btn outline-btn" onclick="location.reload()" style="margin-top:20px;">RIAVVIA SIMULAZIONE</button>
                 </section>
             </div>
         </main>
@@ -103,7 +136,6 @@
             <input type="text" id="code-input" maxlength="10" autocomplete="off" placeholder="_______">
             <button class="terminal-btn submit-btn" id="submit-code">INVIA</button>
         </footer>
-
     </div>
 
     <div class="scanlines"></div>
