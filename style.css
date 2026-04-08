@@ -15,7 +15,6 @@ body {
     min-height: 100vh;
 }
 
-/* Container Principale */
 .space-bg {
     width: 100%;
     max-width: 800px;
@@ -32,7 +31,6 @@ body {
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-/* Stelle generate via JS */
 .star {
     position: absolute;
     background: white;
@@ -40,7 +38,6 @@ body {
     pointer-events: none;
 }
 
-/* Nebulose */
 .nebula {
     position: absolute;
     border-radius: 50%;
@@ -65,7 +62,6 @@ body {
     right: -50px;
 }
 
-/* Badge Missione */
 .badge {
     position: absolute;
     top: 25px;
@@ -77,7 +73,6 @@ body {
     opacity: 0.8;
 }
 
-/* Decorazione Pianeta */
 .planet-system {
     position: absolute;
     top: 60px;
@@ -119,7 +114,6 @@ body {
     z-index: 3;
 }
 
-/* UI Content */
 .content {
     position: relative;
     z-index: 10;
@@ -151,7 +145,6 @@ body {
     animation: fadeIn 1s 0.3s ease both;
 }
 
-/* Bottone */
 .start-btn {
     background: transparent;
     border: 2px solid var(--accent-blue);
@@ -169,42 +162,6 @@ body {
     background: rgba(58, 120, 232, 0.2);
     box-shadow: 0 0 20px rgba(58, 120, 232, 0.4);
     transform: scale(1.05);
-}
-
-/* Keyframes */
-@keyframes float {
-    0%, 100% { transform: translateY(0) rotate(-8deg); }
-    50% { transform: translateY(-15px) rotate(-8deg); }
-}
-
-@keyframes orbit {
-    from { transform: rotate(0deg) translateX(85px) rotate(0deg); }
-    to { transform: rotate(360deg) translateX(85px) rotate(-360deg); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0.4); }
-    70% { box-shadow: 0 0 0 15px rgba(120, 180, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0); }
-}
-
-@keyframes twinkle {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-}
-
-.timer {
-    font-size: 1.5rem;
-    color: #ff4b2b; /* Un colore rosso/arancio per dare urgenza */
-    font-family: 'Courier New', Courier, monospace;
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px rgba(255, 75, 43, 0.7);
-    animation: fadeIn 0.5s ease;
 }
 
 .space-input {
@@ -250,4 +207,30 @@ body {
     font-family: 'Courier New', Courier, monospace;
     text-shadow: 0 0 15px rgba(255, 75, 43, 0.8);
     animation: fadeIn 0.5s ease;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    50% { transform: translateY(-15px) rotate(-8deg); }
+}
+
+@keyframes orbit {
+    from { transform: rotate(0deg) translateX(85px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(85px) rotate(-360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(120, 180, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(120, 180, 255, 0); }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
 }
