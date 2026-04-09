@@ -10,7 +10,7 @@
 body {
     background-color: var(--bg-color);
     color: var(--green-bright);
-    font-family: var(--terminal-font);
+    font-family: var(--Fantasy);
     margin: 0;
     overflow: hidden;
     height: 100vh;
