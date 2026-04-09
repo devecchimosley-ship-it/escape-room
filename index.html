@@ -1,91 +1,1026 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICARUS-7: MATRIX ESCAPE</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICARUS-7 — AURA EMERGENCY PROTOCOL</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=VT323&display=swap');
+
+:root {
+  --c-bg: #020509;
+  --c-panel: #040d14;
+  --c-border: #0a2a3a;
+  --c-cyan: #00e5ff;
+  --c-cyan-dim: #007a8a;
+  --c-red: #ff2244;
+  --c-red-dim: #7a0011;
+  --c-amber: #ffaa00;
+  --c-green: #00ff88;
+  --c-text: #7ec8d8;
+  --c-text-dim: #2a6070;
+  --glow-cyan: 0 0 8px #00e5ff88, 0 0 20px #00e5ff33;
+  --glow-red: 0 0 8px #ff224488, 0 0 20px #ff224433;
+  --glow-amber: 0 0 8px #ffaa0088;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: 'Share Tech Mono', monospace;
+  height: 100vh;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+/* SCANLINES OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* NOISE TEXTURE */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.4;
+}
+
+/* MAIN LAYOUT */
+.hud {
+  display: grid;
+  grid-template-rows: 48px 1fr 60px;
+  height: 100vh;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px;
+  gap: 8px;
+}
+
+/* TOP BAR */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--c-border);
+  background: var(--c-panel);
+  padding: 0 16px;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.top-bar .logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--c-cyan);
+  text-shadow: var(--glow-cyan);
+  letter-spacing: 4px;
+}
+
+.o2-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--c-amber);
+}
+
+.o2-track {
+  width: 120px;
+  height: 6px;
+  background: #111;
+  border: 1px solid var(--c-amber);
+  overflow: hidden;
+}
+
+.o2-fill {
+  height: 100%;
+  background: var(--c-amber);
+  transition: width 1s linear;
+  box-shadow: 0 0 8px var(--c-amber);
+}
+
+.o2-fill.critical { background: var(--c-red); box-shadow: var(--glow-red); }
+
+/* CENTER CONTENT */
+.main-panel {
+  border: 1px solid var(--c-border);
+  background: var(--c-panel);
+  overflow-y: auto;
+  position: relative;
+  padding: 0;
+}
+
+/* Corner decorations */
+.main-panel::before, .main-panel::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  border-color: var(--c-cyan);
+  border-style: solid;
+  z-index: 10;
+}
+.main-panel::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.main-panel::after { top: 0; right: 0; border-width: 2px 2px 0 0; }
+
+/* STATES */
+.state { display: none; padding: 28px 32px; animation: fadeIn 0.4s ease; }
+.state.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* TYPOGRAPHY */
+.section-tag {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--c-cyan-dim);
+  margin-bottom: 6px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+h1, h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--c-cyan);
+  text-shadow: var(--glow-cyan);
+  font-size: 20px;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--c-amber);
+  text-shadow: var(--glow-amber);
+  font-size: 13px;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--c-border);
+  padding-bottom: 10px;
+}
+
+p { line-height: 1.7; color: var(--c-text); font-size: 14px; margin-bottom: 12px; }
+p.dim { color: var(--c-text-dim); font-size: 12px; }
+.err { color: var(--c-red); text-shadow: var(--glow-red); }
+.ok { color: var(--c-green); }
+.amb { color: var(--c-amber); }
+
+/* NARRATIVE BOX */
+.narrative {
+  border-left: 2px solid var(--c-cyan-dim);
+  padding: 14px 18px;
+  margin: 16px 0;
+  background: rgba(0,229,255,0.03);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #aadde8;
+}
+
+.narrative em {
+  color: var(--c-amber);
+  font-style: normal;
+}
+
+/* AURA SPEECH */
+.aura-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 12px 0;
+  padding: 12px;
+  background: rgba(0,229,255,0.04);
+  border: 1px solid rgba(0,229,255,0.1);
+}
+
+.aura-badge {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  color: var(--c-cyan);
+  border: 1px solid var(--c-cyan-dim);
+  padding: 2px 6px;
+  white-space: nowrap;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.aura-text { font-size: 13px; line-height: 1.6; }
+
+/* INPUTS */
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0 10px;
+}
+
+.hud-input {
+  background: transparent;
+  border: 1px solid var(--c-cyan-dim);
+  color: var(--c-cyan);
+  padding: 10px 14px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  outline: none;
+  flex: 1;
+  letter-spacing: 2px;
+  transition: 0.2s;
+}
+
+.hud-input:focus {
+  border-color: var(--c-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.hud-input::placeholder { color: var(--c-text-dim); letter-spacing: 1px; }
+
+/* BUTTONS */
+.hud-btn {
+  background: transparent;
+  border: 1px solid var(--c-cyan);
+  color: var(--c-cyan);
+  padding: 10px 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+
+.hud-btn:hover {
+  background: var(--c-cyan);
+  color: var(--c-bg);
+  box-shadow: var(--glow-cyan);
+}
+
+.hud-btn.danger {
+  border-color: var(--c-red);
+  color: var(--c-red);
+}
+
+.hud-btn.danger:hover {
+  background: var(--c-red);
+  color: #fff;
+  box-shadow: var(--glow-red);
+}
+
+/* SFIDA 1 — RIDDLE */
+.riddle-box {
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  color: var(--c-amber);
+  text-shadow: var(--glow-amber);
+  border: 1px solid var(--c-amber);
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  position: relative;
+  overflow: hidden;
+}
+
+.riddle-box::before {
+  content: '// ENIGMA_01 //';
+  position: absolute;
+  top: 6px; left: 10px;
+  font-size: 10px;
+  color: var(--c-text-dim);
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 2px;
+}
+
+/* SFIDA 2 — FORMULA */
+.formula-display {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--c-cyan-dim);
+  padding: 24px;
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.formula-display .formula-big {
+  font-family: 'VT323', monospace;
+  font-size: 36px;
+  color: var(--c-cyan);
+  text-shadow: var(--glow-cyan);
+}
+
+.var-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 16px;
+}
+
+.var-item {
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 28px;
+  color: var(--c-green);
+}
+
+.var-item span {
+  display: block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--c-text-dim);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+/* SFIDA 3 — CAPSULE */
+.capsule-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.capsule-card {
+  border: 1px solid var(--c-border);
+  padding: 20px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.capsule-card:hover {
+  border-color: var(--c-cyan);
+  box-shadow: var(--glow-cyan);
+  background: rgba(0,229,255,0.05);
+}
+
+.capsule-card .cap-id {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--c-cyan);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.capsule-card .cap-status {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--c-text-dim);
+}
+
+.capsule-card .cap-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.capsule-card[data-cap="A"] .cap-status { color: var(--c-red); }
+.capsule-card[data-cap="C"] .cap-status { color: var(--c-red); }
+
+.clue-box {
+  background: rgba(255,170,0,0.05);
+  border: 1px solid rgba(255,170,0,0.3);
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.clue-box::before {
+  content: '▶ ';
+  color: var(--c-amber);
+}
+
+/* SFIDA 4 — CODICE */
+.code-breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.code-cell {
+  border: 1px solid var(--c-border);
+  padding: 16px 10px;
+  text-align: center;
+}
+
+.code-cell .letter {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--c-cyan);
+  text-shadow: var(--glow-cyan);
+}
+
+.code-cell .value {
+  font-family: 'VT323', monospace;
+  font-size: 32px;
+  color: var(--c-green);
+  display: block;
+  margin: 4px 0;
+}
+
+.code-cell .label {
+  font-size: 9px;
+  color: var(--c-text-dim);
+  letter-spacing: 1px;
+}
+
+/* VITTORIA */
+.victory-art {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.victory-art pre {
+  font-size: 9px;
+  color: var(--c-green);
+  text-shadow: 0 0 10px var(--c-green);
+  line-height: 1.2;
+  display: inline-block;
+}
+
+.big-score {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--c-green);
+  text-shadow: 0 0 20px var(--c-green), 0 0 40px rgba(0,255,136,0.4);
+  text-align: center;
+  margin: 20px 0;
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { text-shadow: 0 0 20px var(--c-green), 0 0 40px rgba(0,255,136,0.4); }
+  50% { text-shadow: 0 0 40px var(--c-green), 0 0 80px rgba(0,255,136,0.6); }
+}
+
+/* SCONFITTA */
+.death-art {
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 80px;
+  color: var(--c-red);
+  text-shadow: var(--glow-red);
+  animation: glitch-red 0.5s infinite;
+}
+
+@keyframes glitch-red {
+  0% { transform: translate(0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(2px, -2px); color: #fff; }
+  75% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0); }
+}
+
+/* BOTTOM BAR */
+.bottom-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--c-border);
+  background: var(--c-panel);
+  padding: 0 16px;
+}
+
+.prompt-label {
+  color: var(--c-cyan-dim);
+  font-size: 12px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+#code-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--c-cyan-dim);
+  color: var(--c-cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  letter-spacing: 3px;
+  outline: none;
+  padding: 4px 8px;
+}
+
+#code-input:focus { border-color: var(--c-cyan); }
+
+/* FEEDBACK */
+.feedback {
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+.feedback.show { opacity: 1; }
+.feedback.err-msg { color: var(--c-red); }
+.feedback.ok-msg { color: var(--c-green); }
+
+/* PROGRESS DOTS */
+.progress {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.pdot {
+  width: 8px; height: 8px;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+}
+
+.pdot.done { background: var(--c-cyan); border-color: var(--c-cyan); box-shadow: var(--glow-cyan); }
+.pdot.active { background: var(--c-amber); border-color: var(--c-amber); animation: blink 1s infinite; }
+
+@keyframes blink { 50% { opacity: 0.3; } }
+
+/* HINT toggles */
+.hint-toggle {
+  background: none;
+  border: none;
+  color: var(--c-text-dim);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  padding: 4px 0;
+  margin-top: 8px;
+  transition: color 0.2s;
+}
+.hint-toggle:hover { color: var(--c-amber); }
+.hint-box { display: none; margin-top: 8px; font-size: 12px; color: var(--c-amber); border-left: 2px solid var(--c-amber); padding-left: 10px; }
+.hint-box.visible { display: block; }
+
+/* SFIDA 3 LOGIC TABLE */
+.logic-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0; }
+.logic-table th { border-bottom: 1px solid var(--c-border); padding: 6px 8px; color: var(--c-text-dim); text-align: left; letter-spacing: 1px; }
+.logic-table td { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 6px 8px; }
+
+/* LOGIN special */
+#state-login { padding: 40px 32px; }
+#state-login h2 { font-size: 28px; }
+.login-sub { font-size: 12px; color: var(--c-text-dim); letter-spacing: 2px; margin-bottom: 30px; }
+</style>
 </head>
 <body>
-    <div class="terminal-container">
-        <header class="terminal-header">
-            <span class="host">SYSTEM@ICARUS-7</span>
-            <span class="status">O2_LEVEL: 100%</span>
-            <span class="time">--:--</span>
-        </header>
 
-        <main class="terminal-content">
-            <div id="display-area">
-                
-                <section id="state-login" class="terminal-state active">
-                    <h2 class="matrix-glitch">INIZIALIZZAZIONE_LINK</h2>
-                    <p>Inserire identificativo squadra per stabilire la connessione.</p>
-                    <div class="form-group">
-                        <input type="text" id="team-name" placeholder="ID_SQUADRA" autocomplete="off">
-                        <input type="number" id="team-size" placeholder="NUM_MEMBRI" min="1">
-                    </div>
-                    <button class="terminal-btn" id="login-btn">STABILISCI CONNESSIONE</button>
-                </section>
+<div class="hud">
 
-                <section id="state-intro" class="terminal-state">
-                    <h2 class="matrix-glitch">CONNESSIONE_STABILITA</h2>
-                    <p class="typewriter">Rilevata anomalia nel sistema di supporto vitale.</p>
-                    <p class="error-text">ALIMENTAZIONE OSSIGENO: COMPROMESSA.</p>
-                    <p>Tempo stimato prima del blackout neurale: 15 minuti.</p>
-                    <button class="terminal-btn start-btn">ENTRA NEL SISTEMA</button>
-                </section>
-
-                <section id="state-sfida1" class="terminal-state">
-                    <h3>PROTOCOLLO_01: LOGICA_VIVA</h3>
-                    <p class="typewriter">"Va nell'acqua e non si bagna, tra le spine e non si punge, entra in casa e non ci resta."</p>
-                    <p>Traduci la soluzione in inglese (3 lettere) e inserisci il codice numerico (A=1, B=2...).</p>
-                </section>
-
-                <section id="state-sfida2" class="terminal-state">
-                    <h3>PROTOCOLLO_02: RISONANZA_NUCLEO</h3>
-                    <div class="enigma-visual">
-                        <div class="matrix-ring"></div>
-                        <div class="reattore-val">000</div>
-                    </div>
-                    <p>Calcola la frequenza F: <span class="formula-text">F = √((4 * 3²) / 1)</span></p>
-                </section>
-
-                <section id="state-sfida3" class="terminal-state">
-                    <h3>PROTOCOLLO_03: EVACUAZIONE_CRITICA</h3>
-                    <p class="alert-text">ATTENZIONE: Una scelta errata scollegherà il tuo segnale permanentemente.</p>
-                    <div class="capsula-grid">
-                        <div class="capsula" onclick="selectCapsule('A')">CAPSULA_A</div>
-                        <div class="capsula" onclick="selectCapsule('B')">CAPSULA_B</div>
-                        <div class="capsula" onclick="selectCapsule('C')">CAPSULA_C</div>
-                    </div>
-                    <p>Solo una è sicura. Le altre sono trappole del sistema.</p>
-                </section>
-
-                <section id="state-sfida4" class="terminal-state">
-                    <h3>PROTOCOLLO_04: COORDINATE_EXIT</h3>
-                    <canvas id="cube-canvas"></canvas>
-                    <p>Calcola il codice di uscita: <span class="formula-text">(40 + 6 + 20 + 9) * 10</span></p>
-                </section>
-
-                <section id="state-vittoria" class="terminal-state">
-                    <h2 class="success-text">EXIT_FOUND</h2>
-                    <p>Siete tornati alla realtà. Connessione chiusa con successo.</p>
-                </section>
-
-                <section id="state-sconfitta" class="terminal-state">
-                    <h2 class="error-text">SEGNALE_INTERROTTO</h2>
-                    <p id="death-reason">Ossigeno esaurito. Sei diventato parte del codice.</p>
-                    <button class="terminal-btn" onclick="location.reload()">RICONNETTI</button>
-                </section>
-            </div>
-        </main>
-
-        <footer class="terminal-input" id="input-area">
-            <span class="prompt">ID@MATRIX:~$</span>
-            <input type="text" id="code-input" autocomplete="off" placeholder="...">
-            <button class="terminal-btn submit-btn" id="submit-code">ESEGUI</button>
-        </footer>
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="logo">ICARUS-7</div>
+    <div class="progress">
+      <div class="pdot" id="dot1"></div>
+      <div class="pdot" id="dot2"></div>
+      <div class="pdot" id="dot3"></div>
+      <div class="pdot" id="dot4"></div>
     </div>
-    <script src="script.js"></script>
+    <div class="o2-bar">
+      <span>O₂</span>
+      <div class="o2-track"><div class="o2-fill" id="o2fill" style="width:100%"></div></div>
+      <span id="o2pct">100%</span>
+    </div>
+    <div id="clock-display" style="font-size:12px;letter-spacing:2px;color:var(--c-text-dim)">--:--</div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-panel">
+
+    <!-- LOGIN -->
+    <section id="state-login" class="state active">
+      <div class="section-tag">// SISTEMA_AURA — INIZIALIZZAZIONE</div>
+      <h2>CONNESSIONE<br>AL NUCLEO</h2>
+      <p class="login-sub">Identificazione squadra richiesta per accedere ai protocolli di emergenza.</p>
+      <div class="aura-line">
+        <span class="aura-badge">AURA</span>
+        <span class="aura-text dim">Rilevato accesso esterno. Modalità contenimento attiva. Inserire credenziali per sblocco protocolli.</span>
+      </div>
+      <div class="form-row" style="margin-top:24px">
+        <input class="hud-input" type="text" id="team-name" placeholder="ID_SQUADRA" autocomplete="off">
+        <input class="hud-input" type="number" id="team-size" placeholder="N_MEMBRI" min="1" max="20" style="max-width:130px">
+      </div>
+      <button class="hud-btn" id="login-btn" style="width:100%;margin-top:10px">STABILISCI CONNESSIONE</button>
+    </section>
+
+    <!-- INTRO -->
+    <section id="state-intro" class="state">
+      <div class="section-tag">// BRIEFING — SITUAZIONE_CRITICA</div>
+      <h2>PROTOCOLLO<br>DI EMERGENZA</h2>
+
+      <div class="narrative">
+        Immaginate di essere i tecnici di bordo della nave spaziale <em>Icarus-7</em>.<br><br>
+        Vi risvegliate con il suono stridente di un allarme. <em>L'ossigeno sta finendo</em> e l'AI della nave, <em>AURA</em>, è entrata in modalità di sicurezza estrema a causa di un guasto critico.<br><br>
+        Se non inserite i codici corretti, le paratie stagne rimarranno bloccate e i serbatoi verranno espulsi nello spazio profondo.
+      </div>
+
+      <div class="aura-line">
+        <span class="aura-badge">AURA</span>
+        <span class="aura-text">Il corridoio è illuminato da luci rosse intermittenti. Una voce metallica risuona negli altoparlanti: <span class="err">"PROTOCOLLO DI CONTENIMENTO ATTIVO. Utente non riconosciuto. Procedura di smaltimento biologico in corso."</span></span>
+      </div>
+
+      <p class="dim" style="margin-top:16px">Avete 15 minuti. Avete 4 sfide da completare.</p>
+
+      <div style="margin-top:20px">
+        <button class="hud-btn" id="start-btn">▶ AVVIA PROTOCOLLO DI SOPRAVVIVENZA</button>
+      </div>
+    </section>
+
+    <!-- SFIDA 1 -->
+    <section id="state-sfida1" class="state">
+      <div class="section-tag">// PROTOCOLLO_01 — SIGILLO DI INGRESSO</div>
+      <h3>SFIDA 1: IL SIGILLO</h3>
+
+      <div class="aura-line">
+        <span class="aura-badge">AURA</span>
+        <span class="aura-text">Per sbloccare il terminale principale devi inserire una sequenza di 3 frasi. Risolvi l'enigma e converti la soluzione in un codice numerico.</span>
+      </div>
+
+      <div class="riddle-box">
+        "Va nell'acqua e non si bagna,<br>
+        tra le spine e non si punge,<br>
+        entra in casa e non ci resta."
+      </div>
+
+      <p>La risposta è una parola di 3 lettere. <span class="amb">Traducila in inglese</span> e attraverso la posizione nell'alfabeto di quelle 3 lettere otterrai il codice.</p>
+
+      <p class="dim">Esempio: se la parola fosse CAT → C=3, A=1, T=20 → codice: 3120</p>
+
+      <button class="hint-toggle" onclick="toggleHint('h1')">▼ mostra indizio</button>
+      <div class="hint-box" id="h1">La risposta in italiano inizia con S. In inglese è SUN (sole). S=19→1, U=21→3, N=14→5. Addendi delle cifre. Codice: <strong>135</strong></div>
+    </section>
+
+    <!-- SFIDA 2 -->
+    <section id="state-sfida2" class="state">
+      <div class="section-tag">// PROTOCOLLO_02 — REATTORE A CURVATURA</div>
+      <h3>SFIDA 2: IL CALCOLO DEL REATTORE</h3>
+
+      <div class="aura-line">
+        <span class="aura-badge">AURA</span>
+        <span class="aura-text">Il motore a curvatura è in sovraccarico. Per stabilizzarlo, devi calcolare la frequenza di risonanza. <span class="err">Se sbagli, il nocciolo fonderà all'istante.</span></span>
+      </div>
+
+      <div class="formula-display">
+        <div class="dim" style="font-size:10px;letter-spacing:3px;margin-bottom:12px">// CALCOLA F — CALCOLATRICI NON AMMESSE</div>
+        <div class="formula-big">F = √( K · C² / M )</div>
+        <div class="var-grid" style="margin-top:20px">
+          <div class="var-item"><span>K</span>4</div>
+          <div class="var-item"><span>C</span>3</div>
+          <div class="var-item"><span>M</span>1</div>
+        </div>
+      </div>
+
+      <p class="dim">Inserisci il valore intero di F.</p>
+
+      <button class="hint-toggle" onclick="toggleHint('h2')">▼ mostra indizio</button>
+      <div class="hint-box" id="h2">F = √(4 · 9 / 1) = √36 = <strong>6</strong></div>
+    </section>
+
+    <!-- SFIDA 3 -->
+    <section id="state-sfida3" class="state">
+      <div class="section-tag">// PROTOCOLLO_03 — EVACUAZIONE CRITICA</div>
+      <h3>SFIDA 3: LE CAPSULE DI SALVATAGGIO</h3>
+
+      <div class="aura-line">
+        <span class="aura-badge">AURA</span>
+        <span class="aura-text"><span class="err">ATTENZIONE:</span> sulla nave ci sono 3 capsule di salvataggio. Una scelta errata è permanente.</span>
+      </div>
+
+      <div class="narrative" style="margin:14px 0">
+        La capsula A ha i <em>motori fusi</em>. La capsula B è descritta come <em>funzionante</em>. La capsula C è <em>piena di radiazioni gamma</em>.<br><br>
+        Un cartello sulla porta della capsula B dice: <em>"La capsula C è pericolosa."</em><br>
+        Un cartello sulla capsula C dice: <em>"La capsula B è sicura."</em><br><br>
+        <strong style="color:var(--c-red)">Solo 1 cartello è vero.</strong>
+      </div>
+
+      <p class="dim" style="margin-bottom:14px">Quale capsula scegli?</p>
+
+      <div class="capsule-grid">
+        <div class="capsule-card" data-cap="A" onclick="selectCapsule('A')">
+          <span class="cap-icon">🔥</span>
+          <span class="cap-id">A</span>
+          <span class="cap-status err">MOTORI FUSI</span>
+        </div>
+        <div class="capsule-card" data-cap="B" onclick="selectCapsule('B')">
+          <span class="cap-icon">🚀</span>
+          <span class="cap-id">B</span>
+          <span class="cap-status ok">OPERATIVA?</span>
+        </div>
+        <div class="capsule-card" data-cap="C" onclick="selectCapsule('C')">
+          <span class="cap-icon">☢️</span>
+          <span class="cap-id">C</span>
+          <span class="cap-status err">RADIAZIONI γ</span>
+        </div>
+      </div>
+
+      <button class="hint-toggle" onclick="toggleHint('h3')">▼ mostra logica</button>
+      <div class="hint-box" id="h3">
+        Se B è vero: C è pericolosa → C sarebbe falso. ✓ Consistente: B=VERO, C=FALSO.<br>
+        Se C è vero: B è sicura → B direbbe "C è pericolosa" ma C sarebbe OK = contraddizione. ✗<br>
+        Quindi B è vero → scegli <strong>CAPSULA B</strong>.
+      </div>
+    </section>
+
+    <!-- SFIDA 4 -->
+    <section id="state-sfida4" class="state">
+      <div class="section-tag">// PROTOCOLLO_04 — COORDINATE DI USCITA</div>
+      <h3>SFIDA 4: IL PORTELLONE FINALE</h3>
+
+      <div class="aura-line">
+        <span class="aura-badge">AURA</span>
+        <span class="aura-text">Per sbloccare il portellone devi trovare il valore di <em class="amb">V-I-T-A</em> risolvendo questo sistema di equazioni logiche.</span>
+      </div>
+
+      <div class="code-breakdown">
+        <div class="code-cell">
+          <div class="letter">V</div>
+          <span class="value">42</span>
+          <div class="label">serie: 2-6-12-20-30-<strong>42</strong></div>
+        </div>
+        <div class="code-cell">
+          <div class="letter">I</div>
+          <span class="value">6</span>
+          <div class="label">facce cubo: F+V-S=2 → F=6</div>
+        </div>
+        <div class="code-cell">
+          <div class="letter">T</div>
+          <span class="value">21</span>
+          <div class="label">4:8 = x:V → x=21</div>
+        </div>
+        <div class="code-cell">
+          <div class="letter">A</div>
+          <span class="value">9</span>
+          <div class="label">√(V+I+T+12)</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--c-border);padding:16px;margin:16px 0;text-align:center">
+        <span class="dim" style="font-size:11px;letter-spacing:2px">FORMULA CODICE</span><br>
+        <span style="font-family:'VT323',monospace;font-size:28px;color:var(--c-cyan)">(V + I + T + A) × 10</span>
+        <br>
+        <span style="font-family:'VT323',monospace;font-size:22px;color:var(--c-text-dim)">(42 + 6 + 21 + 9) × 10 = <span class="amb">?</span></span>
+      </div>
+
+      <p class="dim">Inserisci il risultato finale.</p>
+
+      <button class="hint-toggle" onclick="toggleHint('h4')">▼ mostra calcolo</button>
+      <div class="hint-box" id="h4">42+6+21+9 = 78 × 10 = <strong>780</strong></div>
+    </section>
+
+    <!-- VITTORIA -->
+    <section id="state-vittoria" class="state">
+      <div class="section-tag">// SISTEMA SBLOCCATO</div>
+      <div class="big-score">SIETE LIBERI</div>
+      <div class="victory-art">
+        <pre>
+   ██████╗  ██╗  ██╗ ████████╗
+  ██╔═══██╗ ██║  ██║    ██╔══╝
+  ██║   ██║ ██║  ██║    ██║   
+  ██║   ██║ ██║  ██║    ██║   
+  ╚██████╔╝ ╚█████╔╝    ██║   
+   ╚═════╝   ╚════╝     ╚═╝   
+        </pre>
+      </div>
+      <div class="aura-line">
+        <span class="aura-badge">AURA</span>
+        <span class="aura-text ok">Tutti i protocolli disattivati. Portelloni aperti. Benvenuti sulla Terra, tecnici dell'<em>Icarus-7</em>. Avete salvato la missione.</span>
+      </div>
+      <p class="dim" style="text-align:center;margin-top:20px">Tempo impiegato: <span id="final-time" class="amb">--:--</span></p>
+    </section>
+
+    <!-- SCONFITTA -->
+    <section id="state-sconfitta" class="state">
+      <div class="death-art">✖</div>
+      <div class="section-tag" style="text-align:center;margin:10px 0">// SEGNALE_INTERROTTO</div>
+      <div class="aura-line">
+        <span class="aura-badge" style="color:var(--c-red);border-color:var(--c-red)">AURA</span>
+        <span class="aura-text err" id="death-reason">Il vuoto ha reclamato la tua anima digitale.</span>
+      </div>
+      <div style="margin-top:24px;text-align:center">
+        <button class="hud-btn danger" onclick="location.reload()">⟳ RICONNETTI AL SISTEMA</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM INPUT BAR -->
+  <footer class="bottom-bar" id="input-area" style="display:none">
+    <span class="prompt-label">AURA@ICARUS-7:~$</span>
+    <input type="text" id="code-input" autocomplete="off" placeholder="inserisci codice...">
+    <div class="feedback" id="feedback"></div>
+    <button class="hud-btn" id="submit-btn">INVIA</button>
+  </footer>
+
+</div>
+
+<script>
+// ─── AUDIO ───────────────────────────────────────────────────────────────────
+let audioCtx;
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+function sfx(freq, type, dur, vol = 0.08) {
+  if (!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+const snd = {
+  type: () => sfx(300 + Math.random()*200, 'square', 0.04, 0.015),
+  ok: () => { sfx(600,'sine',0.15); setTimeout(()=>sfx(900,'sine',0.2),120); },
+  err: () => sfx(100,'sawtooth',0.5,0.15),
+  alarm: () => { sfx(880,'sine',0.08); setTimeout(()=>sfx(720,'sine',0.08),120); }
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const CODES = { sfida1:'135', sfida2:'6', sfida4:'780' };
+let state = 'login';
+let o2 = 15; // minutes
+let timerInterval, clockInterval;
+let startTime;
+
+// ─── DOM ──────────────────────────────────────────────────────────────────────
+const inputArea = document.getElementById('input-area');
+const codeInput = document.getElementById('code-input');
+const feedback  = document.getElementById('feedback');
+const o2fill    = document.getElementById('o2fill');
+const o2pct     = document.getElementById('o2pct');
+const clockEl   = document.getElementById('clock-display');
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function go(newState) {
+  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+  document.getElementById(`state-${newState}`).classList.add('active');
+  state = newState;
+
+  const hasInput = newState.startsWith('sfida');
+  inputArea.style.display = hasInput ? 'flex' : 'none';
+  codeInput.value = '';
+  clearFeedback();
+
+  updateDots();
+  if (hasInput) codeInput.focus();
+}
+
+function updateDots() {
+  const order = ['sfida1','sfida2','sfida3','sfida4'];
+  const idx = order.indexOf(state);
+  order.forEach((s,i) => {
+    const dot = document.getElementById(`dot${i+1}`);
+    dot.className = 'pdot';
+    if (i < idx) dot.classList.add('done');
+    else if (i === idx) dot.classList.add('active');
+  });
+}
+
+// ─── CHECK CODE ───────────────────────────────────────────────────────────────
+function checkCode() {
+  const val = codeInput.value.trim();
+  if (val === CODES[state]) {
+    snd.ok(); showFeedback('✓ ACCESSO CONSENTITO', true);
+    codeInput.value = '';
+    setTimeout(() => {
+      if (state === 'sfida1') go('sfida2');
+      else if (state === 'sfida2') go('sfida3');
+      else if (state === 'sfida4') { clearTimers(); go('vittoria'); showFinalTime(); }
+    }, 600);
+  } else {
+    snd.err(); showFeedback('✗ CODICE ERRATO — RIPROVA', false);
+    codeInput.value = '';
+    codeInput.classList.add('shake');
+    setTimeout(() => codeInput.classList.remove('shake'), 400);
+  }
+}
+
+// ─── CAPSULE ──────────────────────────────────────────────────────────────────
+function selectCapsule(c) {
+  if (c === 'B') { snd.ok(); go('sfida4'); }
+  else {
+    snd.err(); clearTimers();
+    document.getElementById('death-reason').innerText =
+      c === 'A'
+        ? 'I motori fusi della capsula A hanno innescato un'esplosione catastrofica.'
+        : 'Le radiazioni gamma della capsula C hanno terminato la tua esistenza in 4 secondi.';
+    go('sconfitta');
+  }
+}
+
+// ─── TIMER ────────────────────────────────────────────────────────────────────
+function startTimers() {
+  startTime = Date.now();
+
+  // O2 countdown
+  timerInterval = setInterval(() => {
+    o2 -= (1/60);
+    const pct = Math.max(0, (o2/15)*100);
+    o2fill.style.width = pct + '%';
+    o2pct.innerText = Math.ceil(pct) + '%';
+    if (pct < 35) {
+      o2fill.classList.add('critical');
+      snd.alarm();
+    }
+    if (o2 <= 0) { clearTimers(); go('sconfitta'); document.getElementById('death-reason').innerText = 'Ossigeno esaurito. Sei diventato parte del codice.'; }
+  }, 1000);
+
+  // Clock
+  clockInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime)/1000);
+    const m = String(Math.floor(elapsed/60)).padStart(2,'0');
+    const s = String(elapsed%60).padStart(2,'0');
+    clockEl.innerText = m + ':' + s;
+  }, 1000);
+}
+
+function clearTimers() {
+  clearInterval(timerInterval);
+  clearInterval(clockInterval);
+}
+
+function showFinalTime() {
+  const elapsed = Math.floor((Date.now() - startTime)/1000);
+  const m = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const s = String(elapsed%60).padStart(2,'0');
+  document.getElementById('final-time').innerText = m + ':' + s;
+}
+
+// ─── FEEDBACK ─────────────────────────────────────────────────────────────────
+let fbTimer;
+function showFeedback(msg, ok) {
+  feedback.textContent = msg;
+  feedback.className = 'feedback show ' + (ok ? 'ok-msg' : 'err-msg');
+  clearTimeout(fbTimer);
+  fbTimer = setTimeout(clearFeedback, 2000);
+}
+function clearFeedback() {
+  feedback.className = 'feedback';
+  feedback.textContent = '';
+}
+
+// ─── HINTS ────────────────────────────────────────────────────────────────────
+function toggleHint(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('visible');
+}
+
+// ─── EVENTS ───────────────────────────────────────────────────────────────────
+document.getElementById('login-btn').addEventListener('click', () => {
+  initAudio();
+  const name = document.getElementById('team-name').value.trim();
+  if (!name) { document.getElementById('team-name').focus(); return; }
+  go('intro');
+});
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  go('sfida1');
+  startTimers();
+});
+
+document.getElementById('submit-btn').addEventListener('click', checkCode);
+codeInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkCode(); snd.type(); });
+
+// ─── EXPOSE GLOBALS ──────────────────────────────────────────────────────────
+window.selectCapsule = selectCapsule;
+window.toggleHint = toggleHint;
+
+// CSS shake
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes shake {
+    0%,100% { transform:translateX(0); }
+    25% { transform:translateX(-6px); }
+    75% { transform:translateX(6px); }
+  }
+  .shake { animation: shake 0.3s ease; }
+`;
+document.head.appendChild(style);
+</script>
+
 </body>
 </html>
