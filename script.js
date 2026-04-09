@@ -31,26 +31,36 @@ const sounds = {
     death: () => playSfx(50, 'sawtooth', 2.0, 0.5)
 };
 
-// --- TYPEWRITER EFFECT ---
+// --- TYPEWRITER EFFECT (RIGA PER RIGA) ---
+async function triggerStateTyping(stateId) {
+    const paragraphs = document.querySelectorAll(`#${stateId} .typewriter`);
+    
+    // 1. Salva il testo e svuota tutti i paragrafi simultaneamente
+    paragraphs.forEach(p => {
+        if (!p.getAttribute('data-text')) {
+            p.setAttribute('data-text', p.innerText); 
+        }
+        p.innerText = ''; 
+    });
+
+    // 2. Scrivi i paragrafi sequenzialmente (una riga alla volta)
+    for (let p of paragraphs) {
+        // Ignora il paragrafo dell'indizio se è nascosto
+        if (p.id.startsWith('hint-') && p.style.display === 'none') continue;
+        await typeText(p);
+    }
+}
+
 async function typeText(element) {
     isTyping = true;
-    const text = element.getAttribute('data-text') || element.innerText;
-    element.setAttribute('data-text', text); // Salva il testo originale
-    element.innerText = '';
+    const text = element.getAttribute('data-text');
     
     for (let i = 0; i < text.length; i++) {
         element.innerHTML += text.charAt(i);
         if (text.charAt(i) !== ' ') sounds.type();
-        await new Promise(r => setTimeout(r, 25)); // Velocità digitazione
+        await new Promise(r => setTimeout(r, 20)); // Velocità digitazione
     }
     isTyping = false;
-}
-
-async function triggerStateTyping(stateId) {
-    const paragraphs = document.querySelectorAll(`#${stateId} .typewriter`);
-    for (let p of paragraphs) {
-        await typeText(p);
-    }
 }
 
 // --- CORE LOGIC ---
@@ -62,7 +72,7 @@ function changeState(newState) {
     next.classList.add('active');
     currentState = newState;
 
-    // Attiva la digitazione per i testi narrativi
+    // Attiva la digitazione per i testi narrativi della nuova sezione
     triggerStateTyping(`state-${newState}`);
 
     // Mostra/Nascondi la barra di input
@@ -87,8 +97,11 @@ function selectCapsule(choice) {
     } else {
         sounds.death();
         clearInterval(timer);
-        document.getElementById('death-reason').innerText = `ERRORE CRITICO: La capsula ${choice} era compromessa. Decompressione hangar avvenuta. Equipaggio eliminato.`;
-        document.getElementById('death-reason').classList.add('typewriter');
+        
+        const deathReason = document.getElementById('death-reason');
+        deathReason.setAttribute('data-text', `ERRORE CRITICO: La capsula ${choice} era compromessa. Decompressione hangar avvenuta. Equipaggio eliminato.`);
+        deathReason.classList.add('typewriter');
+        
         changeState('sconfitta');
     }
 }
@@ -117,6 +130,32 @@ function checkCode() {
     }
 }
 
+// SISTEMA INDIZI
+async function showHint(level) {
+    if (isTyping) return;
+
+    if (level === 1) {
+        const hintBtn = document.getElementById('btn-indizio-1');
+        const hintEl = document.getElementById('hint-1');
+        
+        // Nasconde il pulsante
+        hintBtn.style.display = 'none'; 
+        
+        // Penalità O2
+        o2 -= 1;
+        updateTimerDisplay();
+        sounds.error(); 
+        
+        const text = ">> DECRIPTAZIONE PARZIALE: L'oggetto in questione brilla nel cielo di giorno e ci scalda. In inglese inizia con la lettera 'S'.";
+        
+        hintEl.setAttribute('data-text', text);
+        hintEl.style.display = 'block';
+        hintEl.innerText = '';
+        
+        await typeText(hintEl);
+    }
+}
+
 // TIMER E ALLARMI
 function updateTimerDisplay() {
     const display = document.querySelector('.status');
@@ -134,6 +173,8 @@ function startTimer() {
         if (o2 <= 0) {
             clearInterval(timer);
             sounds.death();
+            const deathReason = document.getElementById('death-reason');
+            deathReason.setAttribute('data-text', "Livello di ossigeno a zero. Asfissia dell'equipaggio confermata.");
             changeState('sconfitta');
         }
     }, 60000); // 1 minuto reale
