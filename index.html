@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICARUS-7: Fuga dallo Spazio</title>
+    <title>ICARUS-7: MATRIX ESCAPE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="terminal-container">
         <header class="terminal-header">
-            <span class="host">ICARUS-7_SYSTEM</span>
-            <span class="status alert">O2 LOW</span>
+            <span class="host">SYSTEM@ICARUS-7</span>
+            <span class="status">O2_LEVEL: 100%</span>
             <span class="time">--:--</span>
         </header>
 
@@ -18,105 +18,74 @@
             <div id="display-area">
                 
                 <section id="state-login" class="terminal-state active">
-                    <h2>IDENTIFICAZIONE EQUIPAGGIO</h2>
-                    <p>Inserire le credenziali per avviare il terminale di emergenza.</p>
+                    <h2 class="matrix-glitch">INIZIALIZZAZIONE_LINK</h2>
+                    <p>Inserire identificativo squadra per stabilire la connessione.</p>
                     <div class="form-group">
-                        <label>NOME SQUADRA:</label>
-                        <input type="text" id="team-name" placeholder="ES: ALPHA-1" autocomplete="off">
+                        <input type="text" id="team-name" placeholder="ID_SQUADRA" autocomplete="off">
+                        <input type="number" id="team-size" placeholder="NUM_MEMBRI" min="1">
                     </div>
-                    <div class="form-group">
-                        <label>NUMERO MEMBRI:</label>
-                        <input type="number" id="team-size" min="1" max="10" placeholder="1">
-                    </div>
-                    <button class="terminal-btn" id="login-btn">AUTENTICA EQUIPAGGIO</button>
+                    <button class="terminal-btn" id="login-btn">STABILISCI CONNESSIONE</button>
                 </section>
 
                 <section id="state-intro" class="terminal-state">
-                    <h2>ACCESSO CONSENTITO</h2>
-                    <p class="glitch-text" data-text="ERRORE SISTEMA CRITICO">ERRORE SISTEMA CRITICO</p>
-                    <p>Log di sistema: Il generatore di ossigeno è stato sabotato. Protocollo di contenimento biologico attivo.</p>
-                    <p class="error-text">TEMPO ALL'ESPULSIONE: 15 MINUTI.</p>
-                    <p>Sbloccare i 4 protocolli di sicurezza per attivare le capsule di salvataggio.</p>
-                    <button class="terminal-btn start-btn">AVVIA SEQUENZA DI SBLOCCO</button>
+                    <h2 class="matrix-glitch">CONNESSIONE_STABILITA</h2>
+                    <p class="typewriter">Rilevata anomalia nel sistema di supporto vitale.</p>
+                    <p class="error-text">ALIMENTAZIONE OSSIGENO: COMPROMESSA.</p>
+                    <p>Tempo stimato prima del blackout neurale: 15 minuti.</p>
+                    <button class="terminal-btn start-btn">ENTRA NEL SISTEMA</button>
                 </section>
 
                 <section id="state-sfida1" class="terminal-state">
-                    <h3>PROTOCOLLO 1: IL SIGILLO DI INGRESSO</h3>
-                    <div class="enigma-visual">
-                        <svg viewBox="0 0 100 100">
-                            <text x="50%" y="50%" text-anchor="middle" class="enigma-text large">?</text>
-                        </svg>
-                    </div>
-                    <p>"Va nell'acqua e non si bagna, tra le spine e non si punge, entra in casa e non ci resta."</p>
-                    <p>Traduci in inglese (3 lettere) e converti in numeri (A=1, B=2...).</p>
+                    <h3>PROTOCOLLO_01: LOGICA_VIVA</h3>
+                    <p class="typewriter">"Va nell'acqua e non si bagna, tra le spine e non si punge, entra in casa e non ci resta."</p>
+                    <p>Traduci la soluzione in inglese (3 lettere) e inserisci il codice numerico (A=1, B=2...).</p>
                 </section>
 
                 <section id="state-sfida2" class="terminal-state">
-                    <h3>PROTOCOLLO 2: IL NUCLEO DEL REATTORE</h3>
+                    <h3>PROTOCOLLO_02: RISONANZA_NUCLEO</h3>
                     <div class="enigma-visual">
-                        <svg viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="45" class="reactor-core"/>
-                            <text x="50" y="55" text-anchor="middle" class="enigma-text reattore-val">--</text>
-                        </svg>
+                        <div class="matrix-ring"></div>
+                        <div class="reattore-val">000</div>
                     </div>
-                    <p>Radiazioni in aumento. Calcola la frequenza di risonanza:</p>
-                    <p class="formula-text">F = √( (K * C²) / M )</p>
-                    <p>Dati: K=4, C=3, M=1. Inserisci il valore di F.</p>
+                    <p>Calcola la frequenza F: <span class="formula-text">F = √((4 * 3²) / 1)</span></p>
                 </section>
 
                 <section id="state-sfida3" class="terminal-state">
-                    <h3>PROTOCOLLO 3: ANALISI CAPSULE</h3>
-                    <div class="enigma-visual capsula-map">
-                        <div class="capsula" id="cap-A"><span>A</span></div>
-                        <div class="capsula" id="cap-B"><span>B</span></div>
-                        <div class="capsula" id="cap-C"><span>C</span></div>
+                    <h3>PROTOCOLLO_03: EVACUAZIONE_CRITICA</h3>
+                    <p class="alert-text">ATTENZIONE: Una scelta errata scollegherà il tuo segnale permanentemente.</p>
+                    <div class="capsula-grid">
+                        <div class="capsula" onclick="selectCapsule('A')">CAPSULA_A</div>
+                        <div class="capsula" onclick="selectCapsule('B')">CAPSULA_B</div>
+                        <div class="capsula" onclick="selectCapsule('C')">CAPSULA_C</div>
                     </div>
-                    <p>Capsula A: Motori fusi. Capsula C: Radiazioni gamma. Capsula B: Funzionante.</p>
-                    <p>Cartello su B: "La capsula C è pericolosa".</p>
-                    <p><span class="alert-text">Solo 1 affermazione è vera.</span> Quale capsula è sicura? (A, B, o C)</p>
+                    <p>Solo una è sicura. Le altre sono trappole del sistema.</p>
                 </section>
 
                 <section id="state-sfida4" class="terminal-state">
-                    <h3>PROTOCOLLO 4: COORDINATE DI FUGA</h3>
-                    <div class="enigma-visual">
-                        <canvas id="cube-canvas"></canvas>
-                    </div>
-                    <p>Calcola il codice finale: <strong class="formula-text">(V+I+T+A) * 10</strong></p>
-                    <p>V=30+10, I=facce cubo, T=x in 4:8=x:V, A=√(V+I+T+12).</p>
+                    <h3>PROTOCOLLO_04: COORDINATE_EXIT</h3>
+                    <canvas id="cube-canvas"></canvas>
+                    <p>Calcola il codice di uscita: <span class="formula-text">(40 + 6 + 20 + 9) * 10</span></p>
                 </section>
 
                 <section id="state-vittoria" class="terminal-state">
-                    <h2>SBLOCCO COMPLETATO</h2>
-                    <p class="success-text">Capsula lanciata! Siete fuori dall'area di esplosione.</p>
-                    <p class="blink">Trasmissione coordinate alla Terra in corso...</p>
-                </section>
-
-                <section id="state-classifica" class="terminal-state">
-                    <h2>LOG SOPRAVVISSUTI</h2>
-                    <table id="leaderboard-table">
-                        <thead>
-                            <tr><th>POS</th><th>SQUADRA</th><th>MEMBRI</th><th>TEMPO</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <button class="terminal-btn outline-btn" onclick="location.reload()">RIAVVIA SISTEMA</button>
+                    <h2 class="success-text">EXIT_FOUND</h2>
+                    <p>Siete tornati alla realtà. Connessione chiusa con successo.</p>
                 </section>
 
                 <section id="state-sconfitta" class="terminal-state">
-                    <h2><span class="error-text">MISSIONE FALLITA</span></h2>
-                    <p>Ossigeno esaurito. Nessun segno di vita rilevato a bordo della ICARUS-7.</p>
-                    <button class="terminal-btn outline-btn" onclick="location.reload()">RE-INIZIALIZZA</button>
+                    <h2 class="error-text">SEGNALE_INTERROTTO</h2>
+                    <p id="death-reason">Ossigeno esaurito. Sei diventato parte del codice.</p>
+                    <button class="terminal-btn" onclick="location.reload()">RICONNETTI</button>
                 </section>
             </div>
         </main>
 
         <footer class="terminal-input" id="input-area">
-            <span class="prompt">&gt; CODICE:</span>
-            <input type="text" id="code-input" autocomplete="off">
-            <button class="terminal-btn submit-btn" id="submit-code">INVIA</button>
+            <span class="prompt">ID@MATRIX:~$</span>
+            <input type="text" id="code-input" autocomplete="off" placeholder="...">
+            <button class="terminal-btn submit-btn" id="submit-code">ESEGUI</button>
         </footer>
     </div>
-    <div class="scanlines"></div>
     <script src="script.js"></script>
 </body>
 </html>
