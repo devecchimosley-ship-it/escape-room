@@ -1,12 +1,11 @@
-// --- Inizializzazione Audio ---
+// --- AUDIO ENGINE ---
 let audioCtx;
-
 function initAudio() {
     if (audioCtx) return;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-function playTone(freq, duration, type = 'sine', gain = 0.5) {
+function playTone(freq, duration, type = 'sine', gain = 0.2) {
     if (!audioCtx) return;
     const osc = audioCtx.createOscillator();
     const gNode = audioCtx.createGain();
@@ -20,284 +19,128 @@ function playTone(freq, duration, type = 'sine', gain = 0.5) {
     osc.stop(audioCtx.currentTime + duration);
 }
 
-function playSoundSuccess() {
-    playTone(1000, 0.1, 'sine', 0.2);
-    setTimeout(() => playTone(1500, 0.1, 'sine', 0.2), 100);
-}
-function playSoundError() { playTone(300, 0.3, 'square', 0.3); }
-function playSoundType() { playTone(Math.random() * 200 + 400, 0.05, 'triangle', 0.05); }
-function playSoundAlarm() { playTone(2000, 0.1, 'sawtooth', 0.1); }
-
-let ambientLoop;
-function startAmbient() {
-    if (!audioCtx || ambientLoop) return;
-    ambientLoop = audioCtx.createBufferSource();
-    const bufferSize = audioCtx.sampleRate * 5; 
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(100, audioCtx.currentTime);
-    
-    ambientLoop.buffer = buffer;
-    ambientLoop.loop = true;
-    ambientLoop.connect(filter);
-    filter.connect(audioCtx.destination);
-    ambientLoop.start();
-}
-
-// --- Logica dell'Escape Box ---
-
-const codes = {
-    sfida1: "192114",
-    sfida2: "6",
-    sfida3: "A", // <--- AGGIORNATO ALLA RISPOSTA "A"
-    sfida4: "780" 
+const sounds = {
+    success: () => { playTone(800, 0.1); setTimeout(() => playTone(1200, 0.2), 100); },
+    error: () => playTone(200, 0.5, 'square'),
+    type: () => playTone(Math.random() * 100 + 500, 0.03, 'triangle', 0.02),
+    alarm: () => playTone(1500, 0.2, 'sawtooth', 0.1)
 };
 
-let currentSate = 'login';
-let currentSfida = '';
+// --- GAME LOGIC ---
+const codes = { sfida1: "192114", sfida2: "6", sfida3: "A", sfida4: "780" };
+let currentState = 'login';
 let o2Minutes = 15;
 let timerInterval;
-let exactStartTime; // Variabile per calcolare il tempo preciso in ms
-
-const displayArea = document.getElementById('display-area');
-const inputArea = document.getElementById('input-area');
-const codeInput = document.getElementById('code-input');
-const submitBtn = document.getElementById('submit-code');
-const o2Display = document.querySelector('.terminal-header .status');
-const timeDisplay = document.querySelector('.terminal-header .time');
+let startTime;
 
 function changeState(newState) {
-    document.getElementById(`state-${currentSate}`).classList.remove('active');
+    document.querySelector('.active').classList.remove('active');
     document.getElementById(`state-${newState}`).classList.add('active');
-    currentSate = newState;
-    
-    typeWriter(document.getElementById(`state-${newState}`));
-    
+    currentState = newState;
+
+    // Gestione input area
+    const inputArea = document.getElementById('input-area');
     if (newState.startsWith('sfida')) {
-        currentSfida = newState;
         inputArea.classList.add('active');
-        codeInput.value = '';
-        codeInput.placeholder = (newState === 'sfida3' ? '_' : '_______');
-        codeInput.maxLength = (newState === 'sfida3' ? 1 : 10);
-        codeInput.focus();
+        document.getElementById('code-input').focus();
     } else {
         inputArea.classList.remove('active');
     }
 
-    if (newState === 'sfida2') initReactorAnimation();
-    if (newState === 'sfida4') initCubeAnimation();
-    if (newState === 'vittoria') playSoundSuccess();
-    if (newState === 'sconfitta') playSoundError();
-}
-
-function typeWriter(element) {
-    const textNodes = element.querySelectorAll('p, h2, h3, li');
-    textNodes.forEach(node => {
-        const fullText = node.getAttribute('data-full-text') || node.innerText;
-        node.setAttribute('data-full-text', fullText);
-        node.innerText = '';
-        let i = 0;
-        function typeCharacter() {
-            if (i < fullText.length) {
-                node.innerText += fullText.charAt(i);
-                if (i % 2 === 0) playSoundType();
-                i++;
-                setTimeout(typeCharacter, Math.random() * 30 + 10);
-            }
-        }
-        typeCharacter();
-    });
+    if (newState === 'sfida2') initReactor();
+    if (newState === 'sfida4') initCube();
 }
 
 function checkCode() {
-    const submittedCode = codeInput.value.trim().toUpperCase();
-    if (submittedCode === codes[currentSfida]) {
-        playSoundSuccess();
+    const input = document.getElementById('code-input');
+    const val = input.value.trim().toUpperCase();
+    
+    if (val === codes[currentState]) {
+        sounds.success();
+        input.value = '';
         
-        if (currentSfida === 'sfida1') changeState('sfida2');
-        else if (currentSfida === 'sfida2') changeState('sfida3');
-        else if (currentSfida === 'sfida3') changeState('sfida4');
-        else if (currentSfida === 'sfida4') {
+        if (currentState === 'sfida1') changeState('sfida2');
+        else if (currentState === 'sfida2') changeState('sfida3');
+        else if (currentState === 'sfida3') changeState('sfida4');
+        else if (currentState === 'sfida4') {
             clearInterval(timerInterval);
-            
-            // Calcolo del tempo finale
-            const endTime = Date.now();
-            const timeDiff = endTime - exactStartTime;
-            saveToLeaderboard(timeDiff); // Salva in locale
-            
+            const timeDiff = Date.now() - startTime;
+            saveScore(timeDiff);
             changeState('vittoria');
-            
-            // Aspetta 6 secondi, poi mostra la classifica
-            setTimeout(() => {
-                renderLeaderboard();
-                changeState('classifica');
-            }, 6000);
+            setTimeout(() => { renderLeaderboard(); changeState('classifica'); }, 5000);
         }
     } else {
-        playSoundError();
-        codeInput.value = '';
+        sounds.error();
+        input.value = '';
     }
 }
 
-// Timer O2
 function startTimer() {
+    startTime = Date.now();
     timerInterval = setInterval(() => {
         o2Minutes--;
-        updateO2Display();
+        document.querySelector('.status').innerText = `O2 ${o2Minutes}m`;
+        if (o2Minutes <= 5) {
+            document.querySelector('.status').classList.add('critical');
+            sounds.alarm();
+        }
         if (o2Minutes <= 0) {
             clearInterval(timerInterval);
             changeState('sconfitta');
         }
-        if (o2Minutes <= 5) playSoundAlarm();
-    }, 60000); // 1 minuto
+    }, 60000);
 }
 
-function updateO2Display() {
-    o2Display.innerText = `O2 ${o2Minutes < 10 ? '0' : ''}${o2Minutes}m`;
-    if (o2Minutes <= 5) o2Display.classList.add('critical');
-    else o2Display.classList.remove('critical');
+// --- UTILITIES & ANIMATIONS ---
+function initReactor() {
+    const text = document.querySelector('.reattore-val');
+    setInterval(() => { text.innerText = Math.floor(Math.random() * 50 + 100); }, 100);
 }
 
-// --- Animazioni ---
-let reactorInterval;
-function initReactorAnimation() {
-    if (reactorInterval) clearInterval(reactorInterval);
-    const valText = document.querySelector('#state-sfida2 .reattore-val');
-    reactorInterval = setInterval(() => {
-        valText.innerText = Math.floor(Math.random() * 10 + 2);
-    }, 100);
+function initCube() {
+    const canvas = document.getElementById('cube-canvas');
+    const ctx = canvas.getContext('2d');
+    let angle = 0;
+    function draw() {
+        if (currentState !== 'sfida4') return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#33ff33';
+        ctx.strokeRect(20 + Math.sin(angle)*10, 20, 50, 50); // Cubo semplificato per performance
+        angle += 0.05;
+        requestAnimationFrame(draw);
+    }
+    draw();
 }
 
-let cubeCanvas, cubeCtx, cubeRotation;
-function initCubeAnimation() {
-    cubeCanvas = document.getElementById('cube-canvas');
-    cubeCtx = cubeCanvas.getContext('2d');
-    cubeRotation = { x: 0, y: 0 };
-    animateCube();
-}
-
-function drawCube(ctx, width, height, rotation) {
-    const nodes = [[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]];
-    const edges = [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]];
-    const scale = Math.min(width, height) * 0.2;
-    const projectedNodes = [];
-    
-    nodes.forEach(node => {
-        let x1 = node[0] * Math.cos(rotation.y) - node[2] * Math.sin(rotation.y);
-        let z1 = node[0] * Math.sin(rotation.y) + node[2] * Math.cos(rotation.y);
-        let y1 = node[1] * Math.cos(rotation.x) - z1 * Math.sin(rotation.x);
-        projectedNodes.push({ x: x1 * scale + width / 2, y: y1 * scale + height / 2 });
-    });
-    
-    ctx.clearRect(0, 0, width, height);
-    ctx.strokeStyle = '#33ff33';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    edges.forEach(edge => {
-        ctx.moveTo(projectedNodes[edge[0]].x, projectedNodes[edge[0]].y);
-        ctx.lineTo(projectedNodes[edge[1]].x, projectedNodes[edge[1]].y);
-    });
-    ctx.stroke();
-}
-
-function animateCube() {
-    if (currentSate !== 'sfida4') return;
-    cubeRotation.x += 0.01; cubeRotation.y += 0.015;
-    drawCube(cubeCtx, cubeCanvas.width, cubeCanvas.height, cubeRotation);
-    requestAnimationFrame(animateCube);
-}
-
-// --- LOGICA CLASSIFICA (Leaderboard) ---
-
-function saveToLeaderboard(timeMs) {
-    const tName = localStorage.getItem('icarusTeamName') || "SCONOSCIUTO";
-    const tSize = localStorage.getItem('icarusTeamSize') || "1";
-
-    // Calcola i minuti e i secondi esatti impiegati
-    let totalSeconds = Math.floor(timeMs / 1000);
-    let mins = Math.floor(totalSeconds / 60);
-    let secs = totalSeconds % 60;
-    let timeStr = `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
-
-    let board = JSON.parse(localStorage.getItem('icarusLeaderboard') || "[]");
-    board.push({ name: tName, players: tSize, timeMs: timeMs, timeStr: timeStr });
-    
-    // Ordina dal più veloce (minor tempo) al più lento
-    board.sort((a, b) => a.timeMs - b.timeMs);
-    
-    localStorage.setItem('icarusLeaderboard', JSON.stringify(board));
+function saveScore(ms) {
+    const name = localStorage.getItem('icarusTeam') || "EQUIPAGGIO";
+    const sec = Math.floor(ms / 1000);
+    const timeStr = `${Math.floor(sec/60)}m ${sec%60}s`;
+    let board = JSON.parse(localStorage.getItem('icarusBoard') || "[]");
+    board.push({ name, timeStr, ms });
+    board.sort((a,b) => a.ms - b.ms);
+    localStorage.setItem('icarusBoard', JSON.stringify(board.slice(0, 5)));
 }
 
 function renderLeaderboard() {
-    const tbody = document.querySelector('#leaderboard-table tbody');
-    tbody.innerHTML = "";
-    let board = JSON.parse(localStorage.getItem('icarusLeaderboard') || "[]");
-
-    // Mostra solo i migliori 8 gruppi
-    board.slice(0, 8).forEach((entry, index) => {
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${entry.name}</td>
-            <td>${entry.players}</td>
-            <td>${entry.timeStr}</td>
-        `;
-        tbody.appendChild(tr);
-    });
+    const body = document.querySelector('#leaderboard-table tbody');
+    const board = JSON.parse(localStorage.getItem('icarusBoard') || "[]");
+    body.innerHTML = board.map((e, i) => `<tr><td>${i+1}</td><td>${e.name}</td><td>-</td><td>${e.timeStr}</td></tr>`).join('');
 }
 
-// Pulsante Reset Classifica Globale (Nascosto ma utile per te)
-document.getElementById('reset-board-btn').addEventListener('click', () => {
-    if(confirm("Sei sicuro di voler cancellare tutta la classifica di tutti i gruppi?")) {
-        localStorage.removeItem('icarusLeaderboard');
-        alert("Classifica azzerata.");
-    }
-});
-
-// --- Eventi ---
-
-// 1. Schermata Login
+// --- EVENTS ---
 document.getElementById('login-btn').addEventListener('click', () => {
-    const tName = document.getElementById('team-name').value.trim().toUpperCase();
-    const tSize = document.getElementById('team-size').value;
-
-    if (!tName || !tSize) {
-        alert("Inserire Nome Squadra e Numero Membri per procedere.");
-        return;
-    }
-
-    // L'audio ha bisogno del primo click dell'utente per sbloccarsi nei browser
+    const name = document.getElementById('team-name').value;
+    if (!name) return alert("Inserisci nome squadra");
+    localStorage.setItem('icarusTeam', name);
     initAudio();
-    startAmbient();
-    playSoundSuccess();
-
-    // Salva i dati correnti
-    localStorage.setItem('icarusTeamName', tName);
-    localStorage.setItem('icarusTeamSize', tSize);
-
-    // Passa all'introduzione
     changeState('intro');
 });
 
-// 2. Inizia la vera sfida e avvia i timer
 document.querySelector('.start-btn').addEventListener('click', () => {
-    playSoundSuccess();
-    
-    exactStartTime = Date.now(); // Segna il tempo esatto di partenza
-    
     changeState('sfida1');
     startTimer();
-    updateO2Display();
-    
-    const now = new Date();
-    timeDisplay.innerText = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}`;
 });
 
-// 3. Invio Codici Enigmi
-submitBtn.addEventListener('click', checkCode);
-codeInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') checkCode();
-});
+document.getElementById('submit-code').addEventListener('click', checkCode);
+document.getElementById('code-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') checkCode(); });
