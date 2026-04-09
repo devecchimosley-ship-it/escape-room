@@ -1,49 +1,63 @@
 :root {
-    --matrix-green: #00ff41;
-    --matrix-dark: #003b00;
-    --alert-red: #ff0000;
-    --bg-black: #0d0208;
+    --m-green: #00ff41;
+    --m-dark: #003b00;
+    --m-bg: #0d0208;
+    --m-red: #ff003c;
 }
 
 body {
-    background-color: var(--bg-black);
-    color: var(--matrix-green);
-    font-family: 'Courier New', monospace;
-    text-shadow: 0 0 8px var(--matrix-green);
+    background-color: var(--m-bg);
+    color: var(--m-green);
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    overflow: hidden;
+    text-shadow: 0 0 5px var(--m-green);
 }
 
 .terminal-container {
-    border: 2px solid var(--matrix-green);
-    box-shadow: 0 0 20px var(--matrix-dark);
-    background: rgba(0, 0, 0, 0.9);
+    width: 95vw; height: 90vh;
+    border: 1px solid var(--m-green);
+    margin: 20px auto;
+    display: flex; flex-direction: column;
+    background: rgba(0, 0, 0, 0.85);
 }
 
-/* Effetto Testo Matrix */
-.matrix-text {
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: .15em solid var(--matrix-green);
-    animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+.terminal-header {
+    padding: 10px; border-bottom: 1px solid var(--m-green);
+    display: flex; justify-content: space-between; font-size: 0.8em;
 }
 
-@keyframes typing { from { width: 0 } to { width: 100% } }
-@keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--matrix-green); } }
+.terminal-state { display: none; padding: 20px; }
+.terminal-state.active { display: block; }
 
-/* Allarme Critico */
-.status.critical {
-    color: var(--alert-red);
-    text-shadow: 0 0 10px var(--alert-red);
-    animation: pulse-red 0.5s infinite;
+.matrix-glitch { animation: glitch 1s infinite; text-transform: uppercase; }
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); color: #fff; }
+    40% { transform: translate(-2px, -2px); }
+    100% { transform: translate(0); }
 }
 
-@keyframes pulse-red {
-    0% { opacity: 1; }
-    50% { opacity: 0.3; }
-    100% { opacity: 1; }
+.terminal-btn {
+    background: transparent; border: 1px solid var(--m-green);
+    color: var(--m-green); padding: 10px; cursor: pointer;
+    width: 100%; margin-top: 10px; transition: 0.3s;
 }
 
-.capsula:hover {
-    border-color: var(--matrix-green);
-    cursor: pointer;
-    background: var(--matrix-dark);
+.terminal-btn:hover { background: var(--m-green); color: var(--m-bg); }
+
+.capsula-grid { display: flex; gap: 10px; margin: 20px 0; }
+.capsula {
+    flex: 1; border: 1px solid var(--m-green); padding: 20px;
+    text-align: center; cursor: pointer;
 }
+.capsula:hover { background: var(--m-dark); }
+
+.status.critical { color: var(--m-red); animation: blink 0.5s infinite; text-shadow: 0 0 10px var(--m-red); }
+
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
+#input-area { display: none; padding: 15px; border-top: 1px solid var(--m-green); }
+#input-area.active { display: flex; align-items: center; }
+#code-input { background: transparent; border: none; border-bottom: 1px solid var(--m-green); color: var(--m-green); outline: none; flex-grow: 1; margin: 0 10px; }
