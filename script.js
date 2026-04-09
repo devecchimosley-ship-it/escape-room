@@ -1,5 +1,5 @@
 let audioCtx;
-const codes = { sfida1: "192114", sfida2: "6", sfida4: "750" };
+const codes = { sfida1: "135", sfida2: "6", sfida4: "750" };
 let currentState = 'login';
 let o2 = 15;
 let timer;
@@ -35,7 +35,7 @@ const sounds = {
 async function triggerStateTyping(stateId) {
     const paragraphs = document.querySelectorAll(`#${stateId} .typewriter`);
     
-    // 1. Salva il testo e svuota tutti i paragrafi simultaneamente
+    // 1. Salva il testo e svuota tutti i paragrafi
     paragraphs.forEach(p => {
         if (!p.getAttribute('data-text')) {
             p.setAttribute('data-text', p.innerText); 
@@ -43,9 +43,9 @@ async function triggerStateTyping(stateId) {
         p.innerText = ''; 
     });
 
-    // 2. Scrivi i paragrafi sequenzialmente (una riga alla volta)
+    // 2. Scrivi i paragrafi sequenzialmente
     for (let p of paragraphs) {
-        // Ignora il paragrafo dell'indizio se è nascosto
+        // Salta il paragrafo dell'indizio se è nascosto
         if (p.id.startsWith('hint-') && p.style.display === 'none') continue;
         await typeText(p);
     }
@@ -58,7 +58,7 @@ async function typeText(element) {
     for (let i = 0; i < text.length; i++) {
         element.innerHTML += text.charAt(i);
         if (text.charAt(i) !== ' ') sounds.type();
-        await new Promise(r => setTimeout(r, 20)); // Velocità digitazione
+        await new Promise(r => setTimeout(r, 20)); // Velocità di digitazione
     }
     isTyping = false;
 }
@@ -72,10 +72,10 @@ function changeState(newState) {
     next.classList.add('active');
     currentState = newState;
 
-    // Attiva la digitazione per i testi narrativi della nuova sezione
+    // Attiva la digitazione narrativa
     triggerStateTyping(`state-${newState}`);
 
-    // Mostra/Nascondi la barra di input
+    // Gestione barra input
     const inputArea = document.getElementById('input-area');
     if (newState === 'sfida1' || newState === 'sfida2' || newState === 'sfida4') {
         inputArea.classList.add('active');
@@ -89,7 +89,7 @@ function changeState(newState) {
 
 // GESTIONE CAPSULE (MORTE ISTANTANEA P3)
 function selectCapsule(choice) {
-    if (isTyping) return; // Impedisce di cliccare mentre il testo appare
+    if (isTyping) return; // Impedisce interazioni se sta ancora scrivendo
 
     if (choice === 'A') {
         sounds.success();
@@ -124,13 +124,13 @@ function checkCode() {
         sounds.error();
         document.getElementById('code-input').value = '';
         
-        // Penalità di tempo per errore
+        // Penalità di tempo (-1 Minuto) per ogni codice sbagliato
         o2 -= 1;
         updateTimerDisplay();
     }
 }
 
-// SISTEMA INDIZI
+// --- SISTEMA INDIZI AD ALTA TENSIONE ---
 async function showHint(level) {
     if (isTyping) return;
 
@@ -144,9 +144,11 @@ async function showHint(level) {
         // Penalità O2
         o2 -= 1;
         updateTimerDisplay();
-        sounds.error(); 
         
-        const text = ">> DECRIPTAZIONE PARZIALE: L'oggetto in questione brilla nel cielo di giorno e ci scalda. In inglese inizia con la lettera 'S'.";
+        // Suono d'allarme per l'ansia
+        sounds.alarm(); 
+        
+        const text = ">> Sotto i tuoi piedi, il pavimento della capsula trema mentre i motori tentano un ultimo avvio. Un sibilo sinistro indica che la riserva dell'aria è ormai ridotta ai minimi termini. Non c'è più tempo per i dubbi o inserisci il codice o il vuoto reclamerà la tua anima!";
         
         hintEl.setAttribute('data-text', text);
         hintEl.style.display = 'block';
