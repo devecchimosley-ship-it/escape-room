@@ -56,8 +56,16 @@ async function typeText(element) {
     const text = element.getAttribute('data-text');
     
     for (let i = 0; i < text.length; i++) {
-        element.innerHTML += text.charAt(i);
-        if (text.charAt(i) !== ' ') sounds.type();
+        const char = text.charAt(i);
+        
+        // MODIFICA: Se trova il comando "a capo", inserisce un <br> in HTML
+        if (char === '\n') {
+            element.innerHTML += '<br>';
+        } else {
+            element.innerHTML += char;
+            if (char !== ' ') sounds.type();
+        }
+        
         await new Promise(r => setTimeout(r, 20)); // Velocità di digitazione
     }
     isTyping = false;
@@ -148,7 +156,8 @@ async function showHint(level) {
         // Suono d'allarme per l'ansia
         sounds.alarm(); 
         
-        const text = ">> Sotto i tuoi piedi, il pavimento della capsula trema mentre i motori tentano un ultimo avvio. Un sibilo sinistro indica che la riserva dell'aria è ormai ridotta ai minimi termini. Non c'è più tempo per i dubbi o inserisci il codice o il vuoto reclamerà la tua anima!";
+        // MODIFICA: Inseriti i simboli di a capo (\n) dopo ogni punto
+        const text = ">> Sotto i tuoi piedi, il pavimento della capsula trema mentre i motori tentano un ultimo avvio.\nUn sibilo sinistro indica che la riserva dell'aria è ormai ridotta ai minimi termini.\nNon c'è più tempo per i dubbi o inserisci il codice o il vuoto reclamerà la tua anima!";
         
         hintEl.setAttribute('data-text', text);
         hintEl.style.display = 'block';
