@@ -58,7 +58,6 @@ async function typeText(element) {
     for (let i = 0; i < text.length; i++) {
         const char = text.charAt(i);
         
-        // MODIFICA: Se trova il comando "a capo", inserisce un <br> in HTML
         if (char === '\n') {
             element.innerHTML += '<br>';
         } else {
@@ -156,7 +155,6 @@ async function showHint(level) {
         // Suono d'allarme per l'ansia
         sounds.alarm(); 
         
-        // MODIFICA: Inseriti i simboli di a capo (\n) dopo ogni punto
         const text = ">> Sotto i tuoi piedi, il pavimento della capsula trema mentre i motori tentano un ultimo avvio.\nUn sibilo sinistro indica che la riserva dell'aria è ormai ridotta ai minimi termini.\nNon c'è più tempo per i dubbi o inserisci il codice o il vuoto reclamerà la tua anima!";
         
         hintEl.setAttribute('data-text', text);
