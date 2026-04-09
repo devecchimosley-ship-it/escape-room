@@ -32,7 +32,7 @@
                     <p class="typewriter">Sveglia, equipaggio della Icarus-7. Rilevato cedimento strutturale nel settore 4.</p>
                     <p class="typewriter">Il generatore di ossigeno principale è stato compromesso e AURA l'AI di bordo è entrata in modalita di sicurezza estrema a causa di guasto critico.</p>
                     <p class="typewriter error-text">TEMPO STIMATO ALL'ASFISSIA: 15 MINUTI.</p>
-                    <p class="typewriter">Se non inserisci il codici corretti, le paratie stagne rimmaranno bloccate.</p>
+                    <p class="typewriter">Se non inserisci i codici corretti, le paratie stagne rimarranno bloccate.</p>
                     <p class="typewriter error-text">HAI 4 SFIDE!</p>
                     <button class="terminal-btn start-btn">AVVIA SEQUENZA DI FUGA</button>
                 </section>
@@ -46,7 +46,7 @@
                     <p class="typewriter">Traduci la soluzione in inglese (3 lettere).</p>
                     <p class="typewriter">Prendi la posizione di ogni lettera nell'alfabeto (A=1, B=2...) e somma le decine con le unità finché non ottieni una sola cifra per lettera.</p>
                     
-                    <button class="terminal-btn" id="btn-indizio-1" onclick="showHint(1)" style="border-color: var(--m-red); color: var(--m-red);">
+                    <button class="terminal-btn btn-danger" id="btn-indizio-1" onclick="showHint(1)">
                         ANALISI CRITICA (COSTO: 1 MIN O2)
                     </button>
                     <p id="hint-1" class="typewriter error-text" style="display: none; margin-top: 15px; font-style: italic; font-weight: bold;"></p>
@@ -89,21 +89,27 @@
                     <h3>PROTOCOLLO 4: COORDINATE TERRESTRI</h3>
                     <p class="typewriter success-text">>> LOG: Motori della capsula agganciati. Sistemi vitali interni online. Speranza di ritorno: 87%.</p>
                     <br>
-                    <p class="typewriter">Ultimo passaggio. Inserire il codice di navigazione per evitare la fascia di asteroidi.</p>
-                    <p class="typewriter">Calcola il codice finale: (40 + 6 + 21 + 9) * 10</p>
+                    <p class="typewriter">Ultimo passaggio. Per sbloccare il portellone devi trovare il valore di V-I-T-A risolvendo questo sistema di equazioni logiche (Calcolatrice ammessa):</p>
+                    <br>
+                    <p class="typewriter">V -> è il numero che completa la serie logica: 2 - 6 - 12 - 20 - 30 - ?</p>
+                    <p class="typewriter">I -> rappresenta il numero di facce di un solido regolare che ha 12 spigoli e 8 vertici.</p>
+                    <p class="typewriter">T -> è il valore di "x" in questa proporzione spaziale: 4 : 8 = x : V</p>
+                    <p class="typewriter formula-text">A -> è il risultato di √(V + I + T + 12)</p>
+                    <br>
+                    <p class="typewriter highlight">La soluzione è la somma dei dati ottenuti (V + I + T + A) moltiplicata per 10.</p>
                 </section>
 
                 <section id="state-vittoria" class="terminal-state">
-                    <h2 class="success-text">SEQUENZA COMPLETATA</h2>
+                    <h2 class="success-text matrix-glitch">SEQUENZA COMPLETATA</h2>
                     <p class="typewriter">>> LOG: Sequenza di eiezione avviata.</p>
                     <p class="typewriter">Siete fuori dalla portata dell'esplosione. L'ICARUS-7 sta collassando.</p>
                     <p class="typewriter highlight">Bentornati a casa, equipaggio.</p>
                 </section>
 
                 <section id="state-sconfitta" class="terminal-state">
-                    <h2 class="error-text">MISSIONE FALLITA</h2>
+                    <h2 class="error-text matrix-glitch">MISSIONE FALLITA</h2>
                     <p id="death-reason" class="typewriter">Nessun segno di vita rilevato. L'equipaggio è perduto nello spazio profondo.</p>
-                    <button class="terminal-btn" onclick="location.reload()">RIAVVIA SIMULAZIONE</button>
+                    <button class="terminal-btn btn-danger" onclick="location.reload()">RIAVVIA SIMULAZIONE</button>
                 </section>
             </div>
         </main>
