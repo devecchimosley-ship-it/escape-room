@@ -1,5 +1,5 @@
 let audioCtx;
-const codes = { sfida1: "135", sfida2: "6", sfida4: "750" };
+const codes = { sfida1: "135", sfida2: "6", sfida4: "780" };
 let currentState = 'login';
 let o2 = 15;
 let timer;
