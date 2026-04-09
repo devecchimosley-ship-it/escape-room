@@ -42,12 +42,13 @@
                     <br>
                     <p class="typewriter highlight">"Va nell'acqua e non si bagna, tra le spine e non si punge, entra in casa e non ci resta."</p>
                     <br>
-                    <p class="typewriter">Traduci la soluzione in inglese (3 lettere) e convertila in numeri (A=1, B=2...).</p>
+                    <p class="typewriter">Traduci la soluzione in inglese (3 lettere).</p>
+                    <p class="typewriter">Prendi la posizione di ogni lettera nell'alfabeto (A=1, B=2...) e somma le decine con le unità finché non ottieni una sola cifra per lettera.</p>
                     
-                    <button class="terminal-btn" id="btn-indizio-1" onclick="showHint(1)" style="border-color: yellow; color: yellow;">
-                        RICHIEDI INDIZIO (COSTO: 1 MIN O2)
+                    <button class="terminal-btn" id="btn-indizio-1" onclick="showHint(1)" style="border-color: var(--m-red); color: var(--m-red);">
+                        ANALISI CRITICA (COSTO: 1 MIN O2)
                     </button>
-                    <p id="hint-1" class="typewriter highlight" style="display: none; margin-top: 15px; color: yellow;"></p>
+                    <p id="hint-1" class="typewriter error-text" style="display: none; margin-top: 15px; font-style: italic; font-weight: bold;"></p>
                 </section>
 
                 <section id="state-sfida2" class="terminal-state">
