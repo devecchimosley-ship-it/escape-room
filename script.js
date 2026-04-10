@@ -1,7 +1,7 @@
 let audioCtx;
 const codes = { sfida1: "135", sfida2: "6", sfida4: "780" };
 let currentState = 'login';
-let o2 = 10;
+let o2 = 25;
 let timer;
 let isTyping = false;
 
