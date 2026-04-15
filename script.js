@@ -13,7 +13,7 @@ const codes = {
 };
 
 let currentState = 'login';
-let o2 = 25; // 25 minuti iniziali
+let o2 = 60; // 25 minuti iniziali
 let timer;
 let isTyping = false;
 
@@ -128,7 +128,7 @@ function checkCode() {
 // TIMER E ALLARMI
 function updateTimerDisplay() {
     const display = document.querySelector('.status');
-    display.innerText = `O2_LEVEL: ${Math.max(0, Math.floor((o2/25)*100))}%`;
+    display.innerText = `O2_LEVEL: ${Math.max(0, Math.floor((o2/60)*100))}%`;
     if (o2 <= 5) {
         display.classList.add('critical');
         sounds.alarm();
