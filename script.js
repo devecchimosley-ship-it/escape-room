@@ -1,7 +1,19 @@
 let audioCtx;
-const codes = { sfida1: "135", sfida2: "6", sfida4: "780" };
+
+// Le 30 risposte corrette
+const codes = {
+    sfida1: "NERO", sfida2: "RESPIRO", sfida3: "TELESCOPIO", sfida4: "REATTORE",
+    sfida5: "GUANTO", sfida6: "ACQUA", sfida7: "ORBITA", sfida8: "VUOTO",
+    sfida9: "STELLA", sfida10: "ECLISSI", sfida11: "TEMPO", sfida12: "ASTEROIDE",
+    sfida13: "COMETA", sfida14: "GRAVITA", sfida15: "LASER", sfida16: "SPECCHIO",
+    sfida17: "ECO", sfida18: "OMBRA", sfida19: "MAGNETE", sfida20: "INERZIA",
+    sfida21: "ATOMO", sfida22: "DNA", sfida23: "VIRUS", sfida24: "SONAR",
+    sfida25: "ZERO", sfida26: "MEMORIA", sfida27: "SONNO", sfida28: "SILENZIO",
+    sfida29: "SANGUE", sfida30: "NOME"
+};
+
 let currentState = 'login';
-let o2 = 25;
+let o2 = 25; // 25 minuti iniziali
 let timer;
 let isTyping = false;
 
@@ -31,11 +43,10 @@ const sounds = {
     death: () => playSfx(50, 'sawtooth', 2.0, 0.5)
 };
 
-// --- TYPEWRITER EFFECT (RIGA PER RIGA) ---
+// --- TYPEWRITER EFFECT ---
 async function triggerStateTyping(stateId) {
     const paragraphs = document.querySelectorAll(`#${stateId} .typewriter`);
     
-    // 1. Salva il testo e svuota tutti i paragrafi
     paragraphs.forEach(p => {
         if (!p.getAttribute('data-text')) {
             p.setAttribute('data-text', p.innerText); 
@@ -43,10 +54,7 @@ async function triggerStateTyping(stateId) {
         p.innerText = ''; 
     });
 
-    // 2. Scrivi i paragrafi sequenzialmente
     for (let p of paragraphs) {
-        // Salta il paragrafo dell'indizio se è nascosto
-        if (p.id.startsWith('hint-') && p.style.display === 'none') continue;
         await typeText(p);
     }
 }
@@ -57,20 +65,18 @@ async function typeText(element) {
     
     for (let i = 0; i < text.length; i++) {
         const char = text.charAt(i);
-        
         if (char === '\n') {
             element.innerHTML += '<br>';
         } else {
             element.innerHTML += char;
             if (char !== ' ') sounds.type();
         }
-        
-        await new Promise(r => setTimeout(r, 20)); // Velocità di digitazione
+        await new Promise(r => setTimeout(r, 20)); // Velocità
     }
     isTyping = false;
 }
 
-// --- CORE LOGIC ---
+// --- CORE LOGIC AUTOMATIZZATA ---
 function changeState(newState) {
     const current = document.querySelector('.terminal-state.active');
     if (current) current.classList.remove('active');
@@ -79,37 +85,15 @@ function changeState(newState) {
     next.classList.add('active');
     currentState = newState;
 
-    // Attiva la digitazione narrativa
     triggerStateTyping(`state-${newState}`);
 
-    // Gestione barra input
+    // Mostra barra di input solo se siamo in una "sfida"
     const inputArea = document.getElementById('input-area');
-    if (newState === 'sfida1' || newState === 'sfida2' || newState === 'sfida4') {
+    if (newState.startsWith('sfida')) {
         inputArea.classList.add('active');
         document.getElementById('code-input').focus();
     } else {
         inputArea.classList.remove('active');
-    }
-
-    if (newState === 'sfida2') simulateReactor();
-}
-
-// GESTIONE CAPSULE (MORTE ISTANTANEA P3)
-function selectCapsule(choice) {
-    if (isTyping) return; // Impedisce interazioni se sta ancora scrivendo
-
-    if (choice === 'A') {
-        sounds.success();
-        changeState('sfida4');
-    } else {
-        sounds.death();
-        clearInterval(timer);
-        
-        const deathReason = document.getElementById('death-reason');
-        deathReason.setAttribute('data-text', `ERRORE CRITICO: La capsula ${choice} era compromessa. Decompressione hangar avvenuta. Equipaggio eliminato.`);
-        deathReason.classList.add('typewriter');
-        
-        changeState('sconfitta');
     }
 }
 
@@ -117,13 +101,17 @@ function checkCode() {
     if (isTyping) return;
 
     const val = document.getElementById('code-input').value.trim().toUpperCase();
+    
     if (val === codes[currentState]) {
         sounds.success();
         document.getElementById('code-input').value = '';
         
-        if (currentState === 'sfida1') changeState('sfida2');
-        else if (currentState === 'sfida2') changeState('sfida3');
-        else if (currentState === 'sfida4') {
+        // Estrazione dinamica del numero di livello
+        let currentNum = parseInt(currentState.replace('sfida', ''));
+        
+        if (currentNum < 30) {
+            changeState('sfida' + (currentNum + 1));
+        } else {
             clearInterval(timer);
             changeState('vittoria');
         }
@@ -131,44 +119,16 @@ function checkCode() {
         sounds.error();
         document.getElementById('code-input').value = '';
         
-        // Penalità di tempo (-1 Minuto) per ogni codice sbagliato
+        // Penalità di O2 per ogni errore
         o2 -= 1;
         updateTimerDisplay();
-    }
-}
-
-// --- SISTEMA INDIZI AD ALTA TENSIONE ---
-async function showHint(level) {
-    if (isTyping) return;
-
-    if (level === 1) {
-        const hintBtn = document.getElementById('btn-indizio-1');
-        const hintEl = document.getElementById('hint-1');
-        
-        // Nasconde il pulsante
-        hintBtn.style.display = 'none'; 
-        
-        // Penalità O2
-        o2 -= 1;
-        updateTimerDisplay();
-        
-        // Suono d'allarme per l'ansia
-        sounds.alarm(); 
-        
-        const text = ">> Sotto i tuoi piedi, il pavimento della capsula trema mentre i motori tentano un ultimo avvio.\nUn sibilo sinistro indica che la riserva dell'aria è ormai ridotta ai minimi termini.\nNon c'è più tempo per i dubbi o inserisci il codice o il vuoto reclamerà la tua anima!";
-        
-        hintEl.setAttribute('data-text', text);
-        hintEl.style.display = 'block';
-        hintEl.innerText = '';
-        
-        await typeText(hintEl);
     }
 }
 
 // TIMER E ALLARMI
 function updateTimerDisplay() {
     const display = document.querySelector('.status');
-    display.innerText = `O2_LEVEL: ${Math.max(0, Math.floor((o2/15)*100))}%`;
+    display.innerText = `O2_LEVEL: ${Math.max(0, Math.floor((o2/25)*100))}%`;
     if (o2 <= 5) {
         display.classList.add('critical');
         sounds.alarm();
@@ -186,17 +146,10 @@ function startTimer() {
             deathReason.setAttribute('data-text', "Livello di ossigeno a zero. Asfissia dell'equipaggio confermata.");
             changeState('sconfitta');
         }
-    }, 60000); // 1 minuto reale
+    }, 60000); // 1 minuto per ciclo
 }
 
-function simulateReactor() {
-    const el = document.querySelector('.reattore-val');
-    if(el) {
-        setInterval(() => { if(currentState === 'sfida2') el.innerText = Math.floor(Math.random() * 900 + 100); }, 100);
-    }
-}
-
-// EVENTS
+// EVENTI DI GIOCO
 document.getElementById('login-btn').addEventListener('click', () => {
     initAudio();
     changeState('intro');
