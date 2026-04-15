@@ -31,78 +31,173 @@
                     <h2 class="matrix-glitch">ACCESSO CONSENTITO</h2>
                     <p class="typewriter">Sveglia, equipaggio della Icarus-7. Rilevato cedimento strutturale nel settore 4.</p>
                     <p class="typewriter">Il generatore di ossigeno principale è stato compromesso e AURA l'AI di bordo è entrata in modalita di sicurezza estrema a causa di guasto critico.</p>
-                    <p class="typewriter error-text">TEMPO STIMATO ALL'ASFISSIA: 10 MINUTI.</p>
-                    <p class="typewriter">Se non inserisci i codici corretti, le paratie stagne rimarranno bloccate.</p>
-                    <p class="typewriter error-text">HAI 4 SFIDE!</p>
+                    <p class="typewriter error-text">TEMPO STIMATO ALL'ASFISSIA: 25 MINUTI.</p>
+                    <p class="typewriter">Se non inserisci i codici di bypass corretti, le paratie stagne rimarranno bloccate.</p>
+                    <p class="typewriter error-text">HAI 30 PROTOCOLLI DA SUPERARE!</p>
                     <button class="terminal-btn start-btn">AVVIA SEQUENZA DI FUGA</button>
                 </section>
 
                 <section id="state-sfida1" class="terminal-state">
-                    <h3>PROTOCOLLO 1: IL SIGILLO DI INGRESSO</h3>
-                    <p class="typewriter">Le porte dell'ala abitativa sono bloccate. Risolvi l'enigma per forzare il sigillo idraulico:</p>
-                    <br>
-                    <p class="typewriter highlight">"Va nell'acqua e non si bagna, tra le spine e non si punge, entra in casa e non ci resta."</p>
-                    <br>
-                    <p class="typewriter">Traduci la soluzione in inglese (3 lettere).</p>
-                    <p class="typewriter">Prendi la posizione di ogni lettera nell'alfabeto (A=1, B=2...) e somma le decine con le unità finché non ottieni una sola cifra per lettera.</p>
-                    
-                    <button class="terminal-btn btn-danger" id="btn-indizio-1" onclick="showHint(1)">
-                        ANALISI CRITICA (COSTO: 1 MIN O2)
-                    </button>
-                    <p id="hint-1" class="typewriter error-text" style="display: none; margin-top: 15px; font-style: italic; font-weight: bold;"></p>
+                    <h3>PROTOCOLLO 1: ANOMALIA GRAVITAZIONALE</h3>
+                    <p class="typewriter">Piego il tempo e divoro la luce. Niente sfugge alla mia gravità. Cosa sono? (Parola 2)</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA (1 PAROLA)</p>
                 </section>
-
                 <section id="state-sfida2" class="terminal-state">
-                    <h3>PROTOCOLLO 2: IL NUCLEO DEL REATTORE</h3>
-                    <p class="typewriter success-text">>> LOG: Sigillo rimosso. L'aria nel corridoio A-1 è irrespirabile. Procedete al reattore.</p>
-                    <br>
-                    <p class="typewriter">Allarme radiazioni. Per attraversare la sala macchine dovete stabilizzare il nucleo.</p>
-                    <div class="enigma-visual">
-                        <div class="matrix-ring"></div>
-                        <div class="reattore-val">000</div>
-                    </div>
-                    <p class="typewriter">Calcola la frequenza di risonanza (F):</p>
-                    <p class="typewriter formula-text">F = √((4 * 3²) / 1)</p>
+                    <h3>PROTOCOLLO 2: SUPPORTO VITALE</h3>
+                    <p class="typewriter success-text">>> LOG: Settore 1 sbloccato.</p>
+                    <p class="typewriter">Leggero come una piuma, ma in caso di depressurizzazione resisti solo 3 minuti senza di me.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
                 </section>
-
                 <section id="state-sfida3" class="terminal-state">
-                    <h3>PROTOCOLLO 3: ANALISI CAPSULE</h3>
-                    <p class="typewriter success-text">>> LOG: Stabilità termica al 40%. Radiazioni in calo. Accesso all'hangar capsule consentito.</p>
-                    <br>
-                    <p class="typewriter">I sistemi di eiezione sono danneggiati. Solo una capsula ha i motori integri.</p>
-                    <p class="typewriter alert-text">ATTENZIONE: Salire su una capsula fusa provocherà la decompressione immediata e la morte dell'equipaggio.</p>
-                    <div class="capsula-grid">
-                        <div class="capsula" onclick="selectCapsule('A')">CAPSULA_A</div>
-                        <div class="capsula" onclick="selectCapsule('B')">CAPSULA_B</div>
-                        <div class="capsula" onclick="selectCapsule('C')">CAPSULA_C</div>
-                    </div>
-                    <p class="typewriter highlight">Capsula A: Motori fusi.</p>
-                    <p class="typewriter highlight">Capsula C: Radiazioni gamma.</p>
-                    <p class="typewriter highlight">Capsula B: Funzionante.</p>
-                    <br>
-                    <p class="typewriter">Cartello sulla capsula B: "La capsula C non è pericolosa".</p>
-                    <p class="typewriter">Cartello sulla capsula C: "La capsula B è sicura".</p>
-                    <p class="typewriter">Sapendo che SOLO 1 affermazione è vera, clicca sulla capsula sicura.</p>
+                    <h3>PROTOCOLLO 3: OTTICA DI BORDO</h3>
+                    <p class="typewriter">Non ho occhi, ma vedo costantemente nel passato dell'universo.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida4" class="terminal-state">
+                    <h3>PROTOCOLLO 4: ENERGIA PRIMARIA</h3>
+                    <p class="typewriter">Ho un nucleo ma non sono un pianeta. Se mi tocchi, le radiazioni ti uccidono.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida5" class="terminal-state">
+                    <h3>PROTOCOLLO 5: EVA (Extra Vehicular Activity)</h3>
+                    <p class="typewriter">Ho cinque dita ma non sono vivo. Ti proteggo dal vuoto siderale durante le riparazioni.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida6" class="terminal-state">
+                    <h3>PROTOCOLLO 6: ELEMENTI</h3>
+                    <p class="typewriter">Solida, liquida o vapore. Se espulsa nel cosmo divento polvere di cristallo.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida7" class="terminal-state">
+                    <h3>PROTOCOLLO 7: DINAMICA SPAZIALE</h3>
+                    <p class="typewriter">Cado costantemente verso il pianeta ma non tocco mai terra. Traccio un cerchio invisibile.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida8" class="terminal-state">
+                    <h3>PROTOCOLLO 8: L'ESTERNO</h3>
+                    <p class="typewriter">Più aria togli, più divento grande. Nello spazio sono ovunque.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida9" class="terminal-state">
+                    <h3>PROTOCOLLO 9: NAVIGAZIONE</h3>
+                    <p class="typewriter">Sono una fornace nucleare naturale. Da lontano sembro un innocuo puntino luminoso.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida10" class="terminal-state">
+                    <h3>PROTOCOLLO 10: OSCURAMENTO</h3>
+                    <p class="typewriter">Quando la luna mi fa da scudo, rubo la luce al giorno.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
                 </section>
 
-                <section id="state-sfida4" class="terminal-state">
-                    <h3>PROTOCOLLO 4: COORDINATE TERRESTRI</h3>
-                    <p class="typewriter success-text">>> LOG: Motori della capsula agganciati. Sistemi vitali interni online. Speranza di ritorno: 87%.</p>
-                    <br>
-                    <p class="typewriter">Ultimo passaggio. Per sbloccare il portellone devi trovare il valore di V-I-T-A risolvendo questo sistema di equazioni logiche (Calcolatrice ammessa):</p>
-                    <br>
-                    <p class="typewriter">V -> è il numero che completa la serie logica: 2 - 6 - 12 - 20 - 30 - ?</p>
-                    <p class="typewriter">I -> rappresenta il numero di facce di un solido regolare che ha 12 spigoli e 8 vertici.</p>
-                    <p class="typewriter">T -> è il valore di "x" in questa proporzione spaziale: 4 : 8 = x : V</p>
-                    <p class="typewriter formula-text">A -> è il risultato di √(V + I + T + 12)</p>
-                    <br>
-                    <p class="typewriter highlight">La soluzione è la somma dei dati ottenuti (V + I + T + A) moltiplicata per 10.</p>
+                <section id="state-sfida11" class="terminal-state">
+                    <h3>PROTOCOLLO 11: COSTANTE UNIVERSALE</h3>
+                    <p class="typewriter success-text">>> LOG: Mainframe parzialmente ripristinato. Dati corrotti in aumento.</p>
+                    <p class="typewriter">Divoro tutto: acciaio, pianeti, stelle. Non puoi fermarmi, puoi solo misurarmi.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida12" class="terminal-state">
+                    <h3>PROTOCOLLO 12: DETRITI</h3>
+                    <p class="typewriter">Sasso vagabondo, porto crateri e distruzione se incontro un'atmosfera.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida13" class="terminal-state">
+                    <h3>PROTOCOLLO 13: CORPI CELESTI</h3>
+                    <p class="typewriter">Ho una testa di roccia e una lunga coda di ghiaccio e gas illuminata dal sole.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida14" class="terminal-state">
+                    <h3>PROTOCOLLO 14: FORZE ATTRATTIVE</h3>
+                    <p class="typewriter">Più hai massa, più sono forte. Sulla Terra ti tengo incollato al pavimento.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA (Senza accento)</p>
+                </section>
+                <section id="state-sfida15" class="terminal-state">
+                    <h3>PROTOCOLLO 15: ARMERIA E COMUNICAZIONI</h3>
+                    <p class="typewriter">Sono luce concentrata. Posso tagliare l'acciaio o trasmettere dati a distanza.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida16" class="terminal-state">
+                    <h3>PROTOCOLLO 16: RIFLESSIONI</h3>
+                    <p class="typewriter">Mostro sempre la verità su chi hai davanti, ma esattamente al contrario.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida17" class="terminal-state">
+                    <h3>PROTOCOLLO 17: ACUSTICA</h3>
+                    <p class="typewriter">Parlo senza avere bocca, ma rispondo solo se tu gridi per primo. Nel vuoto non esisto.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida18" class="terminal-state">
+                    <h3>PROTOCOLLO 18: PROIEZIONI</h3>
+                    <p class="typewriter">Cresco al tramonto cosmico, sparisco al buio assoluto, rinasco all'alba.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida19" class="terminal-state">
+                    <h3>PROTOCOLLO 19: CAMPI DI FORZA</h3>
+                    <p class="typewriter">Attiro il metallo e ho due poli, ma non sono un pianeta.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida20" class="terminal-state">
+                    <h3>PROTOCOLLO 20: LEGGI DEL MOTO</h3>
+                    <p class="typewriter">Mi oppongo a ogni cambiamento di velocità. Senza di me la nave si fermerebbe all'istante spegnendo i motori.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+
+                <section id="state-sfida21" class="terminal-state">
+                    <h3>PROTOCOLLO 21: STRUTTURA MINIMA</h3>
+                    <p class="typewriter success-text">>> LOG: Accesso all'ala medica e biologica sbloccato. 10 protocolli rimanenti.</p>
+                    <p class="typewriter">Sono il mattone invisibile dell'universo, composto da protoni, neutroni ed elettroni.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida22" class="terminal-state">
+                    <h3>PROTOCOLLO 22: CODICE SORGENTE BIO</h3>
+                    <p class="typewriter">Sono il manuale di istruzioni della vita. Ho la forma di una doppia elica.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida23" class="terminal-state">
+                    <h3>PROTOCOLLO 23: MINACCIA INTERNA</h3>
+                    <p class="typewriter">Posso infettare sia il mainframe digitale di AURA sia le tue cellule. Copio me stesso.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida24" class="terminal-state">
+                    <h3>PROTOCOLLO 24: SCANSIONE ESTERNA</h3>
+                    <p class="typewriter">Uso il suono per farti vedere ciò che è nascosto. Pipistrelli e sottomarini mi amano.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida25" class="terminal-state">
+                    <h3>PROTOCOLLO 25: TERMODINAMICA</h3>
+                    <p class="typewriter">A -273,15 gradi sono "assoluto". Quando arrivo io, ogni molecola si ferma.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida26" class="terminal-state">
+                    <h3>PROTOCOLLO 26: ARCHIVIO DATI</h3>
+                    <p class="typewriter">Che sia RAM o umana, mi usi per non dimenticare. Se mi cancelli, perdi il passato.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida27" class="terminal-state">
+                    <h3>PROTOCOLLO 27: CRIO-STASI</h3>
+                    <p class="typewriter">Nelle capsule mi chiamano "criogenico". Ti faccio viaggiare per secoli come fosse una notte.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida28" class="terminal-state">
+                    <h3>PROTOCOLLO 28: IL VUOTO</h3>
+                    <p class="typewriter">Nello spazio profondo, lontano da motori e atmosfere, sono l'unica cosa che potrai ascoltare.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida29" class="terminal-state">
+                    <h3>PROTOCOLLO 29: PRESSIONE CORPOREA</h3>
+                    <p class="typewriter">Pompa nelle tue vene a zero G o sulla Terra. È un fluido vitale rosso.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
+                </section>
+                <section id="state-sfida30" class="terminal-state">
+                    <h3>PROTOCOLLO 30: AUTENTICAZIONE FINALE</h3>
+                    <p class="typewriter alert-text">>> ATTENZIONE: ULTIMO BLOCCO DELLE CAPSULE DI EIEZIONE.</p>
+                    <p class="typewriter">È strettamente tuo fin dalla nascita, ma i tuoi compagni di equipaggio lo usano molto più di te per chiamarti.</p>
+                    <p class="typewriter highlight">INSERIRE RISPOSTA</p>
                 </section>
 
                 <section id="state-vittoria" class="terminal-state">
                     <h2 class="success-text matrix-glitch">SEQUENZA COMPLETATA</h2>
                     <p class="typewriter">>> LOG: Sequenza di eiezione avviata.</p>
-                    <p class="typewriter">Siete fuori dalla portata dell'esplosione. L'ICARUS-7 sta collassando.</p>
+                    <p class="typewriter">Tutti i 30 protocolli superati. Siete fuori dalla portata dell'esplosione. L'ICARUS-7 sta collassando.</p>
                     <p class="typewriter highlight">Bentornati a casa, equipaggio.</p>
                 </section>
 
